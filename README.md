@@ -2,6 +2,9 @@
 
 GroupWriter is a collaborative text editing application, similar and influenced by [etherpad](https://etherpad.org). Create and edit documents in real-time with colleagues or friends, while sharing images, adding comments, and making suggestions. File upload is based on s3 compatible storage like minio.
 
+## Demo
+![Plugin as used in groupwriter](/documentation/groupwriter.gif)
+
 ## Setup
 
 The application is divided into a [backend](https://github.com/b310-digital/groupwriter-backend) and [frontend](https://github.com/b310-digital/groupwriter-frontend) docker image. 

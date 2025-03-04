@@ -9,7 +9,9 @@ GroupWriter is a collaborative text editing application, similar and influenced 
 
 The application is divided into a [backend](https://github.com/b310-digital/groupwriter-backend) and [frontend](https://github.com/b310-digital/groupwriter-frontend) docker image. 
 
-### Docker Compose
+### Docker Compose for Production
+
+Important: Currently, the backend is expected to run on the subdomain `write-backend` as it is configured within the frontend during build time.
 
 ```
 services:

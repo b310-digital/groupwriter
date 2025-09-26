@@ -1,0 +1,39 @@
+name: Node Checks
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        required: true
+        type: string
+      node-version:
+        required: false
+        type: string
+        default: "22"
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: "npm"
+          cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+      
+      - run: npm ci
+      
+      - name: Run tests
+        run: npm test
+      
+      - name: Check linting
+        run: npm run lint:check
+      
+      - name: Check formatting
+        run: npm run type:check

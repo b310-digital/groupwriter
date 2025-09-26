@@ -1,0 +1,14 @@
+# Ignore all
+/*
+
+# Now whitelist:
+!/.github/
+!/backend
+!/frontend
+!/documentation
+!README.md
+!LICENSE
+!.env.default
+!docker-compose.yml
+!.gitignore
+.DS_Store

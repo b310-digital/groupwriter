@@ -1,0 +1,19 @@
+name: Validate and test
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  frontend:
+    uses: ./.github/workflows/reusable-checks.yml
+    with:
+      working-directory: ./frontend
+      node-version: "22"
+  
+  backend:
+    uses: ./.github/workflows/reusable-checks.yml
+    with:
+      working-directory: ./backend
+      node-version: "22"

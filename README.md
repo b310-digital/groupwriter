@@ -16,11 +16,11 @@ Important: Currently, the backend is expected to run on the subdomain `write-bac
 ```
 services:
   editor:
-    image: ghcr.io/b310-digital/groupwriter/frontend:latest
+    image: ghcr.io/b310-digital/groupwriter/groupwriter-frontend:latest
     ports:
       - "${APP_FRONTEND_PORT:-8080}:8080"
   backend:
-    image: ghcr.io/b310-digital/groupwriter/backend:latest
+    image: ghcr.io/b310-digital/groupwriter/groupwriter-backend:latest
     container_name: backend
     environment:
       DATABASE_URL: postgresql://groupwriter-user:groupwriter-password@postgres/groupwriter-backend-dev

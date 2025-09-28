@@ -15,13 +15,12 @@ services:
       # preview
       - "4173:4173"
     volumes:
-      - .:/home/node/app
+      - ./frontend:/home/node/app
       #- app_editor_node_modules:/home/node/app
   backend:
     build:
       context: ./backend
       target: development
-    container_name: backend
     tty: true
     stdin_open: true
     environment:
@@ -40,7 +39,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ../groupwriter-backend:/home/node/app
+      - ./backend:/home/node/app
       #- app_backend_node_modules:/home/node/app/node_modules
     restart: always
   postgres:

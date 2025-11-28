@@ -7,7 +7,7 @@ services:
     stdin_open: true
     environment:
       BINDING: "0.0.0.0"
-      VITE_HOCUSPOCUS_SERVER_URL: "http://localhost:5173/backend"
+      VITE_HOCUSPOCUS_SERVER_URL: "backend/"
       TESTING_PLAYWRIGHT_WS_ENDPOINT: "ws://playwright:9323"
       TESTING_PLAYWRIGHT_BASE_URL: "http://editor:5173"
     ports:
@@ -17,7 +17,11 @@ services:
     volumes:
       - ./frontend:/home/node/app
       #- app_editor_node_modules:/home/node/app
-  backend:
+    networks:
+      - default
+      - kits-shared
+
+  editor-backend:
     build:
       context: ./backend
       target: development
@@ -36,12 +40,17 @@ services:
       VAULT_ENCRYPTION_KEY_BASE64: ${DOCKER_COMPOSE_APP_VAULT_ENCRYPTION_KEY_BASE64}
       FEATURE_REMOVE_DOCUMENTS_TOGGLE: ${DOCKER_COMPOSE_APP_FEATURE_REMOVE_DOCUMENTS_TOGGLE:-true}
       FEATURE_REMOVE_DOCUMENTS_MAX_AGE_IN_DAYS: ${DOCKER_COMPOSE_APP_FEATURE_REMOVE_DOCUMENTS_MAX_AGE_IN_DAYS:-730}
+      JWT_SECRET: ${JWT_SECRET}
     ports:
       - "3000:3000"
     volumes:
       - ./backend:/home/node/app
       #- app_backend_node_modules:/home/node/app/node_modules
     restart: always
+    networks:
+      - default
+      - kits-shared
+
   postgres:
     image: postgres:15-alpine
     environment:
@@ -56,6 +65,9 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data/pgdata
+    networks:
+      - default
+      - kits-shared
 
   minio:
     image: minio/minio
@@ -82,3 +94,10 @@ volumes:
   postgres_data:
   app_editor_node_modules:
   app_backend_node_modules:
+
+networks:
+  default:
+    driver: bridge
+
+  kits-shared:
+    external: true

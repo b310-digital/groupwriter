@@ -7,7 +7,7 @@ services:
     stdin_open: true
     environment:
       BINDING: "0.0.0.0"
-      VITE_HOCUSPOCUS_SERVER_URL: "backend/"
+      VITE_HOCUSPOCUS_SERVER_URL: "/backend"
       TESTING_PLAYWRIGHT_WS_ENDPOINT: "ws://playwright:9323"
       TESTING_PLAYWRIGHT_BASE_URL: "http://editor:5173"
     ports:

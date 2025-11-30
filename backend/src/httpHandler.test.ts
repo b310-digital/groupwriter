@@ -8,6 +8,7 @@ import {
   handleDeleteImageRequest,
   handleGetImageRequest,
   handleUploadImageRequest,
+  handleGetOwnDocumentsRequest
 } from "./httpHandler";
 import { Document } from "@prisma/client";
 import { downloadEncryptedImage } from "./utils/uploaderDownloader";
@@ -42,15 +43,48 @@ vi.mock("formidable", () => ({
 // prisma.reset();
 
 describe("handleCreateDocumentRequest", () => {
-  it("creates a document", async () => {
+  it("creates a document without owner", async () => {
     const response = mock<ServerResponse<IncomingMessage>>();
-    await handleCreateDocumentRequest(response, prisma);
+    await handleCreateDocumentRequest(response, prisma, null);
     const result = JSON.parse(
       response.end.mock.calls[0][0] as string,
     ) as Document;
     expect(result.id).toBeDefined();
+    expect(result.ownerExternalId).toBeNull();
+  });
+  it("creates a document with owner", async () => {
+    const response = mock<ServerResponse<IncomingMessage>>();
+    await handleCreateDocumentRequest(response, prisma, "123");
+    const result = JSON.parse(
+      response.end.mock.calls[0][0] as string,
+    ) as Document;
+    expect(result.id).toBeDefined();
+    expect(result.ownerExternalId).toEqual("123");
   });
 });
+
+describe("handleGetOwnDocumentsRequest", () => {
+  it("returns empty list when no ownerId is provided", async () => {
+    await prisma.document.create({ data: {ownerExternalId:"owner-123"} });
+    await prisma.document.create({ data: {ownerExternalId:null} });
+    const response = mock<ServerResponse<IncomingMessage>>();
+    await handleGetOwnDocumentsRequest(response, prisma, null);
+    const result = JSON.parse(
+      response.end.mock.calls[0][0] as string,
+    ) as Document;
+    expect(result).toEqual([]);
+  })
+  it("returns list when ownerId is provided", async () => {
+    const document = await prisma.document.create({ data: { ownerExternalId : "owner-234" } });
+    const response = mock<ServerResponse<IncomingMessage>>();
+    await handleGetOwnDocumentsRequest(response, prisma, "owner-234");
+    const result = JSON.parse(
+      response.end.mock.calls[0][0] as string,
+    ) as Document[];
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toEqual(document.id);
+  })
+})
 
 describe("handleDeleteDocumentRequest", () => {
   it("deletes a document", async () => {

@@ -7,6 +7,8 @@ import {
   updateDocument,
   isValidModificationSecret,
   deleteDocument,
+  createDocument,
+  getDocumentsByOwner,
 } from "./document";
 import {
   buildExampleDocument,
@@ -199,5 +201,50 @@ describe("updateDocument", () => {
 
   it("does not accept an invalid document id", async () => {
     expect(await updateDocument(prisma, "invalid", undefined)).toBeFalsy();
+  });
+});
+
+describe("document ownership", () => {
+  describe("createDocument", () => {
+    it("assigns ownerExternalId when passed", async () => {
+      const doc = await createDocument(prisma, "owner-123");
+
+      expect(doc.ownerExternalId).toBe("owner-123");
+    });
+
+    it("sets ownerExternalId to null when null is passed", async () => {
+      const doc = await createDocument(prisma, null);
+
+      expect(doc.ownerExternalId).toBeNull();
+    });
+  });
+
+  describe("getDocumentsByOwner", () => {
+    it("returns only documents with matching ownerExternalId in the correct order", async () => {
+      const ownerA = "owner-A";
+      const ownerB = "owner-B";
+
+      const a1 = await createDocument(prisma, ownerA);
+      const a2 = await createDocument(prisma, ownerA);
+
+      await createDocument(prisma, ownerB);
+
+      const docs = await getDocumentsByOwner(prisma, ownerA);
+
+      expect(docs.length).toBe(2);
+      expect(docs.map(d => d.id)).toEqual([a1.id, a2.id]);
+    });
+
+    it("returns an empty list if owner has no documents", async () => {
+      const docs = await getDocumentsByOwner(prisma, "owner-234");
+
+      expect(docs).toEqual([]);
+    });
+
+    it("returns an empty list if ownerExternalId is null", async () => {
+      const docs = await getDocumentsByOwner(prisma, null);
+
+      expect(docs).toEqual([]);
+    });   
   });
 });

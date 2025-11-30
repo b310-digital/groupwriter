@@ -52,8 +52,8 @@ export const fetchOwnDocuments = async (): Promise<LocalDocument[]> => {
     if (!response.ok) {
       console.error(`HTTP error! status: ${response.status}`);
     } else {
-      const documents = (await response.json());
-      return documents as LocalDocument[];
+      const documents = (await response.json()) as LocalDocument[];
+      return documents;
     }
   } catch (error) {
     console.error('Error fetching data:', error);

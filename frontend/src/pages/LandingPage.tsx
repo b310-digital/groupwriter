@@ -14,10 +14,12 @@ function LandingPage() {
 
   useEffect(() => {
     async function load() {
-      const result = await fetchOwnDocuments(); // your async function
+      const result = await fetchOwnDocuments();
       setOwnDocuments(result.slice(0, 3));
     }
-    load();
+    load().catch(() => {
+      console.error('Failed to load own documents');
+    });
   }, []);
 
   return (

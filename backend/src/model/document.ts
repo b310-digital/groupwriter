@@ -30,6 +30,7 @@ export const getDocumentsByOwner = async (
   prisma: PrismaClient,
   ownerExternalId: string
 ) => {
+  if (!ownerExternalId) return [];
   return prisma.document.findMany({
     where: {
       ownerExternalId: ownerExternalId,

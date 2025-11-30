@@ -4,7 +4,7 @@ import { deleteImage } from "./image";
 import { deleteImageFromBucket } from "../utils/s3";
 import { isValidUUID } from "../utils/validators";
 
-export const createDocument = async (prisma: PrismaClient, personId: string | null) => {
+export const createDocument = async (prisma: PrismaClient, personId?: string | null) => {
   return prisma.document.create({ data: { ownerExternalId: personId } });
 };
 

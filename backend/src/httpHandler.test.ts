@@ -9,7 +9,7 @@ import {
   handleUploadImageRequest,
   handleGetOwnDocumentsRequest,
 } from "./httpHandler";
-import { Document } from "../generated/prisma/client";
+import { Document } from "./generated/prisma/client";
 import { downloadEncryptedImage } from "./utils/uploaderDownloader";
 import { deleteImageFromBucket } from "./utils/s3";
 import { DeleteObjectCommandOutput } from "@aws-sdk/client-s3";

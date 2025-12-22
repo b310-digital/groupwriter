@@ -3,7 +3,10 @@ import { deleteImage } from "./image";
 import { deleteImageFromBucket } from "../utils/s3";
 import { isValidUUID } from "../utils/validators";
 
-export const createDocument = async (prisma: PrismaClient, personId?: string | null) => {
+export const createDocument = async (
+  prisma: PrismaClient,
+  personId?: string | null,
+) => {
   return prisma.document.create({ data: { ownerExternalId: personId } });
 };
 
@@ -27,7 +30,7 @@ export const fetchDocument = async (
 
 export const getDocumentsByOwner = async (
   prisma: PrismaClient,
-  ownerExternalId: string
+  ownerExternalId: string,
 ) => {
   if (!ownerExternalId) return [];
   return prisma.document.findMany({

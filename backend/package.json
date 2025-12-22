@@ -5,7 +5,7 @@
   "homepage": "https://b310.de",
   "author": "B310 Digital GmbH",
   "scripts": {
-    "start:prod": "node dist/app.js",
+    "start:prod": "node dist/src/app.js",
     "start:dev": "ts-node src/app.ts",
     "build:prod": "npx tsc -p ./tsconfig.prod.json",
     "lint": "eslint .",

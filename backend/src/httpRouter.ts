@@ -10,7 +10,6 @@ import { PrismaClient } from "@prisma/client";
 import { onRequestPayload } from "@hocuspocus/server";
 import jwt from 'jsonwebtoken';
 import { parse } from "cookie";
-import "dotenv/config";
 
 /*
   This very basic router is used to handle the http requests to the server.

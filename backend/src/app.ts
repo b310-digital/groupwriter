@@ -1,7 +1,6 @@
 import { onRequestPayload, Server } from "@hocuspocus/server";
 import { Database } from "@hocuspocus/extension-database";
 import { Logger } from "@hocuspocus/extension-logger";
-import { PrismaClient } from "@prisma/client";
 import { scheduleRemoveOldDocumentsCronJob } from "./crons/remove_old_documents_cron";
 import {
   fetchDocument,
@@ -11,8 +10,9 @@ import {
 import { handleReadOnlyMode } from "./utils/hooks";
 import httpRouter from "./httpRouter";
 import * as Y from "yjs";
+import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({});
 
 const server = new Server({
   port: parseInt(process.env.PORT, 10) || 3000,

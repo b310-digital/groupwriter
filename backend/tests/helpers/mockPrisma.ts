@@ -3,7 +3,7 @@ import type {
   Document,
   Image,
   PrismaClient,
-} from "../../src/generated/prisma/client";
+} from "../../generated/prisma/client";
 
 // Define mock function types that match what we use in tests
 type MockFn<TReturn> = ReturnType<typeof vi.fn> & {

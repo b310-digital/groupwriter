@@ -1,5 +1,5 @@
-import { PrismaClient, Prisma } from "../generated/prisma/client";
-import type { Image } from "../generated/prisma/client";
+import { PrismaClient, Prisma } from "../../generated/prisma/client";
+import type { Image } from "../../generated/prisma/client";
 import { isValidUUID } from "../utils/validators";
 
 export const createImage = async (

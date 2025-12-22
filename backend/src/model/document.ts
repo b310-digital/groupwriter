@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from "../generated/prisma/client";
+import { PrismaClient, Prisma } from "../../generated/prisma/client";
 import { deleteImage } from "./image";
 import { deleteImageFromBucket } from "../utils/s3";
 import { isValidUUID } from "../utils/validators";

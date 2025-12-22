@@ -30,7 +30,7 @@ jobs:
       - run: npm ci
 
       - name: Generate prisma
-        if: github.job == 'backend'
+        if: contains(inputs.working-directory, 'backend')
         run: npx prisma generate
       
       - name: Run tests

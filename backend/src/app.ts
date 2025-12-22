@@ -10,7 +10,7 @@ import {
 import { handleReadOnlyMode } from "./utils/hooks";
 import httpRouter from "./httpRouter";
 import * as Y from "yjs";
-import { PrismaClient } from "../generated/prisma";
+import { PrismaClient } from "../generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 const adapter = new PrismaPg({

@@ -1,5 +1,9 @@
 import { beforeEach, vi } from "vitest";
-import type { Document, Image, PrismaClient } from "../../generated/prisma";
+import type {
+  Document,
+  Image,
+  PrismaClient,
+} from "../../generated/prisma/client";
 
 // Define mock function types that match what we use in tests
 type MockFn<TReturn> = ReturnType<typeof vi.fn> & {

@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import type { Image } from "../../generated/prisma";
+import type { Image } from "../../generated/prisma/client";
 
 export const buildExampleImage = (
   documentId: string,

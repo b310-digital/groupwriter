@@ -10,9 +10,13 @@ import {
 import { handleReadOnlyMode } from "./utils/hooks";
 import httpRouter from "./httpRouter";
 import * as Y from "yjs";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../generated/prisma";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-const prisma = new PrismaClient({});
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+});
+const prisma = new PrismaClient({ adapter });
 
 const server = new Server({
   port: parseInt(process.env.PORT, 10) || 3000,

@@ -1,5 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
-import { PrismockClient } from "prismock";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   deleteOldDocuments,
   fetchDocument,
@@ -17,11 +16,17 @@ import {
 import { createExampleImage } from "../../tests/helpers/imageHelpers";
 import { deleteImage } from "./image";
 import { deleteImageFromBucket } from "../utils/s3";
+import { PrismaClient } from "../../generated/prisma";
+import { createMockPrismaClient } from "../../tests/helpers/mockPrisma";
 
 vi.mock("./image");
 vi.mock("../utils/s3");
 
-const prisma = new PrismockClient();
+let prisma: PrismaClient;
+
+beforeEach(() => {
+  prisma = createMockPrismaClient();
+});
 
 describe("deleteOldDocuments", () => {
   it("should delete old documents, but keep new documents", async () => {

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../../generated/prisma";
 import { randomUUID } from "crypto";
 
 export const buildExampleImage = (documentId: string) => {

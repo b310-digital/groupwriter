@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../generated/prisma";
 import { createDocument, deleteDocument, getDocumentsByOwner } from "./model/document";
 import { IncomingMessage, ServerResponse } from "http";
 import formidable from "formidable";

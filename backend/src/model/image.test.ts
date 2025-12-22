@@ -1,10 +1,15 @@
-import { PrismockClient } from "prismock";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { createImage, deleteImage, getImage } from "./image";
 import { randomUUID } from "crypto";
 import { createExampleImage } from "../../tests/helpers/imageHelpers";
+import { PrismaClient } from "../../generated/prisma";
+import { createMockPrismaClient } from "../../tests/helpers/mockPrisma";
 
-const prisma = new PrismockClient();
+let prisma: PrismaClient;
+
+beforeEach(() => {
+  prisma = createMockPrismaClient();
+});
 
 describe("createImage", () => {
   it("should create an image", async () => {

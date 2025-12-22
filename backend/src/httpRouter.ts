@@ -6,7 +6,7 @@ import {
   handleUploadImageRequest,
   handleGetOwnDocumentsRequest,
 } from "./httpHandler";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../generated/prisma";
 import { onRequestPayload } from "@hocuspocus/server";
 import jwt from 'jsonwebtoken';
 import { parse } from "cookie";

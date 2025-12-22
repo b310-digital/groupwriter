@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../../generated/prisma";
 
 export const buildExampleDocument = (lastAccessedAt?: Date) => {
   const data = new TextEncoder().encode("example");

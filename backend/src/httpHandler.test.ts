@@ -1,6 +1,5 @@
 import { IncomingMessage, ServerResponse } from "http";
-import { PrismockClient } from "prismock";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mock } from "vitest-mock-extended";
 import {
   handleCreateDocumentRequest,
@@ -10,11 +9,17 @@ import {
   handleUploadImageRequest,
   handleGetOwnDocumentsRequest
 } from "./httpHandler";
-import { Document } from "@prisma/client";
+import { Document, PrismaClient } from "../generated/prisma";
 import { downloadEncryptedImage } from "./utils/uploaderDownloader";
 import { deleteImageFromBucket } from "./utils/s3";
 import { DeleteObjectCommandOutput } from "@aws-sdk/client-s3";
-const prisma = new PrismockClient();
+import { createMockPrismaClient } from "../tests/helpers/mockPrisma";
+
+let prisma: PrismaClient;
+
+beforeEach(() => {
+  prisma = createMockPrismaClient();
+});
 
 vi.mock("stream/promises");
 vi.mock("./utils/uploaderDownloader");

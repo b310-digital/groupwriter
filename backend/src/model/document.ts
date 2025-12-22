@@ -1,5 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { PrismaClient, Prisma } from "../../generated/prisma";
 import { deleteImage } from "./image";
 import { deleteImageFromBucket } from "../utils/s3";
 import { isValidUUID } from "../utils/validators";
@@ -52,7 +51,7 @@ export const updateDocument = async (
     await prisma.document.update({
       where: { id: documentName },
       data: {
-        data: state,
+        data: new Uint8Array(state),
         updatedAt: new Date(),
         lastAccessedAt: new Date(),
       },
@@ -62,7 +61,7 @@ export const updateDocument = async (
   } catch (error) {
     // P2025 is the error code for a document not found
     if (
-      error instanceof PrismaClientKnownRequestError &&
+      error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2025"
     )
       return false;
@@ -124,7 +123,7 @@ export const deleteDocument = async (
   } catch (error) {
     // P2025 is the error code for a document not found
     if (
-      error instanceof PrismaClientKnownRequestError &&
+      error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2025"
     )
       return false;

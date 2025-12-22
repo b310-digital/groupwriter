@@ -31,7 +31,6 @@
     "globals": "^16.5.0",
     "prettier": "3.7.4",
     "prisma": "^7.2.0",
-    "prismock": "^1.35.4",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
@@ -45,11 +44,13 @@
     "@hocuspocus/extension-database": "^3.2.3",
     "@hocuspocus/extension-logger": "^3.2.3",
     "@hocuspocus/server": "^3.1.1",
+    "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "@types/formidable": "^3.4.5",
     "cookie": "^1.0.2",
     "cron": "^4.3.3",
     "formidable": "^3.5.2",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.3"
   }
 }

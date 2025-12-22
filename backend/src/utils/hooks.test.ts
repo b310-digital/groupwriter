@@ -1,10 +1,16 @@
-import { describe, it, expect } from "vitest";
+import { beforeEach, describe, it, expect } from "vitest";
 import { ConnectionConfiguration } from "@hocuspocus/server";
 import { handleReadOnlyMode } from "./hooks";
-import { PrismockClient } from "prismock";
 import { createExampleDocument } from "../../tests/helpers/documentHelpers";
 import { randomUUID } from "crypto";
-const prisma = new PrismockClient();
+import { PrismaClient } from "../../generated/prisma";
+import { createMockPrismaClient } from "../../tests/helpers/mockPrisma";
+
+let prisma: PrismaClient;
+
+beforeEach(() => {
+  prisma = createMockPrismaClient();
+});
 
 describe("handleReadOnlyMode", () => {
   it("should set readOnly mode to true when modificationSecret is empty", async () => {

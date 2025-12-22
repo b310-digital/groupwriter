@@ -8,15 +8,15 @@ import {
 } from "../helpers/hocuspocusHelpers";
 import { Database } from "@hocuspocus/extension-database";
 import { handleReadOnlyMode } from "../../src/utils/hooks";
-import { PrismockClient } from "prismock";
 import { createDocument } from "../../src/model/document";
 import httpRouter from "../../src/httpRouter";
 import { onRequestPayload } from "@hocuspocus/server";
-import { Document } from "@prisma/client";
+import { Document, PrismaClient } from "../../generated/prisma";
 import {
   proseMirrorJson,
   proseMirrorYencodedStateUpdate,
 } from "../helpers/e2eTestData";
+import { createMockPrismaClient } from "../helpers/mockPrisma";
 
 describe("server", () => {
   it("should load a yjs document from the server", async () => {
@@ -71,7 +71,7 @@ describe("server", () => {
   });
 
   it("sets the readOnly flag to false when the correct modification secret is provided", async () => {
-    const prisma = new PrismockClient();
+    const prisma = createMockPrismaClient();
     const newDocument = await createDocument(prisma);
 
     const hocuspocus = await newHocuspocus({
@@ -97,7 +97,7 @@ describe("server", () => {
   });
 
   it("sets the readOnly flag to true when the incorrect modification secret is provided", async () => {
-    const prisma = new PrismockClient();
+    const prisma = createMockPrismaClient();
     const newDocument = await createDocument(prisma);
 
     const hocuspocus = await newHocuspocus({
@@ -124,7 +124,7 @@ describe("server", () => {
 
   // tests if the extensions are loaded
   it("POST /documents", async () => {
-    const prisma = new PrismockClient();
+    const prisma = createMockPrismaClient();
     const hocuspocus = await newHocuspocus({
       onRequest: async (data: onRequestPayload) => {
         await httpRouter(data, prisma);

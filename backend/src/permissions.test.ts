@@ -1,13 +1,19 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { checkPermission } from "./permissions";
 import { createDocument } from "./model/document";
-import { PrismockClient } from "prismock";
 import { mock } from "vitest-mock-extended";
 import { ServerResponse, IncomingMessage } from "http";
+import { PrismaClient } from "../generated/prisma";
+import { createMockPrismaClient } from "../tests/helpers/mockPrisma";
+
+let prisma: PrismaClient;
+
+beforeEach(() => {
+  prisma = createMockPrismaClient();
+});
 
 describe("checkPermission", () => {
   it("resolves if the secret is correct", async () => {
-    const prisma = new PrismockClient();
     const document = await createDocument(prisma);
     const response = mock<ServerResponse<IncomingMessage>>();
     await expect(
@@ -22,7 +28,6 @@ describe("checkPermission", () => {
   });
 
   it("rejects if the secret is incorrect", async () => {
-    const prisma = new PrismockClient();
     const document = await createDocument(prisma);
     const response = mock<ServerResponse<IncomingMessage>>();
     await expect(

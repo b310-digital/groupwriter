@@ -6,9 +6,9 @@
   "main": "dist/index.js",
   "homepage": "https://b310.de",
   "devDependencies": {
-    "@tiptap/core": "^3.6.1",
-    "@tiptap/pm": "^3.6.1",
-    "yjs": "^13.6.23",
+    "@tiptap/core": "^3.14.0",
+    "@tiptap/pm": "^3.14.0",
+    "yjs": "^13.6.28",
     "typescript": "^5.9.2",
     "vite": "^7.1.7",
     "uuid": "^13.0.0"

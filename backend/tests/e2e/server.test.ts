@@ -10,7 +10,7 @@ import { Database } from "@hocuspocus/extension-database";
 import { handleReadOnlyMode } from "../../src/utils/hooks";
 import httpRouter from "../../src/httpRouter";
 import { onRequestPayload } from "@hocuspocus/server";
-import { Document } from "../../src/generated/prisma/client";
+import { Document } from "../../generated/prisma/client";
 import {
   proseMirrorJson,
   proseMirrorYencodedStateUpdate,

@@ -8,7 +8,6 @@
 !/.github/
 !/prisma/
 !/src/
-/src/generated/
 !.dockerignore
 !.gitignore
 !.prettierrc

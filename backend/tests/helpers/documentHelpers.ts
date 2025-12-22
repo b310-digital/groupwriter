@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import type { Document } from "../../generated/prisma/client";
+import type { Document } from "../../src/generated/prisma/client";
 
 export const buildExampleDocument = (
   lastAccessedAt?: Date,

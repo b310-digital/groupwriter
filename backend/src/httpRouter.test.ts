@@ -8,7 +8,7 @@ import {
   handleDeleteImageRequest,
   handleGetImageRequest,
   handleUploadImageRequest,
-  handleGetOwnDocumentsRequest
+  handleGetOwnDocumentsRequest,
 } from "./httpHandler";
 
 vi.mock("./httpHandler");

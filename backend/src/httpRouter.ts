@@ -6,9 +6,9 @@ import {
   handleUploadImageRequest,
   handleGetOwnDocumentsRequest,
 } from "./httpHandler";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../generated/prisma/client";
 import { onRequestPayload } from "@hocuspocus/server";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 import { parse } from "cookie";
 
 /*
@@ -92,8 +92,8 @@ function extractPersonIdFromCookies(cookies?: string): string | null {
 
   try {
     const decoded = jwt.verify(personId, secret, {
-      algorithms: ['HS256'],
-    }) as { pid: string }    
+      algorithms: ["HS256"],
+    }) as { pid: string };
     personId = decoded.pid;
   } catch {
     console.error("JWT verification failed for person_id cookie");

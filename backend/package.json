@@ -45,7 +45,7 @@
     "@hocuspocus/extension-database": "^3.2.3",
     "@hocuspocus/extension-logger": "^3.2.3",
     "@hocuspocus/server": "^3.1.1",
-    "@prisma/client": "^6.16.2",
+    "@prisma/client": "^7.2.0",
     "@types/formidable": "^3.4.5",
     "cookie": "^1.0.2",
     "cron": "^4.3.3",

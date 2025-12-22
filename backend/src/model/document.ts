@@ -4,8 +4,8 @@ import { deleteImage } from "./image";
 import { deleteImageFromBucket } from "../utils/s3";
 import { isValidUUID } from "../utils/validators";
 
-export const createDocument = async (prisma: PrismaClient) => {
-  return prisma.document.create({ data: {} });
+export const createDocument = async (prisma: PrismaClient, personId?: string | null) => {
+  return prisma.document.create({ data: { ownerExternalId: personId } });
 };
 
 export const fetchDocument = async (
@@ -22,6 +22,21 @@ export const fetchDocument = async (
       id: true,
       data: true,
       modificationSecret: true,
+    },
+  });
+};
+
+export const getDocumentsByOwner = async (
+  prisma: PrismaClient,
+  ownerExternalId: string
+) => {
+  if (!ownerExternalId) return [];
+  return prisma.document.findMany({
+    where: {
+      ownerExternalId: ownerExternalId,
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
 };

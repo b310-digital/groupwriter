@@ -18,11 +18,12 @@
     "format:check": "npx prettier . --check"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.7.4",
     "@heroicons/react": "^2.2.0",
     "@hocuspocus/provider": "^3.2.3",
     "@packages/tiptap-extension-color-with-classes": "*",
-    "@packages/tiptap-extension-image-delete-callback": "*",
     "@packages/tiptap-extension-comment-collaboration": "*",
+    "@packages/tiptap-extension-image-delete-callback": "*",
     "@tiptap/core": "^3.6.1",
     "@tiptap/extension-collaboration": "^3.6.1",
     "@tiptap/extension-collaboration-caret": "^3.6.1",

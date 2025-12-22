@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { createDocument, deleteDocument } from "./model/document";
+import { createDocument, deleteDocument, getDocumentsByOwner } from "./model/document";
 import { IncomingMessage, ServerResponse } from "http";
 import formidable from "formidable";
 import { createImage, deleteImage, getImage } from "./model/image";
@@ -15,16 +15,36 @@ import { deleteImageFromBucket } from "./utils/s3";
 export const handleCreateDocumentRequest = async (
   response: ServerResponse<IncomingMessage>,
   prisma: PrismaClient,
+  personId: string | null,
 ): Promise<void> => {
   console.debug(`Creating new document`);
   // return a new document:
-  const document = await createDocument(prisma).catch((error: Error) => {
+  const document = await createDocument(prisma, personId).catch((error: Error) => {
     console.error(error);
     throw error;
   });
 
   response.writeHead(200, { "Content-Type": "text/json" });
   response.end(JSON.stringify(document));
+};
+
+export const handleGetOwnDocumentsRequest = async (
+  response: ServerResponse<IncomingMessage>,
+  prisma: PrismaClient,
+  personId: string,
+): Promise<void> => {
+  if (!personId) {
+    response.writeHead(200, { "Content-Type": "text/json" });
+    response.end(JSON.stringify([]));
+    return;
+  }
+  console.debug(`Fetching documents for ownerExternalId=${personId}`);
+  const documents = await getDocumentsByOwner(prisma, personId).catch((error: Error) => {
+    console.error(error);
+    throw error;
+  });
+  response.writeHead(200, { "Content-Type": "text/json" });
+  response.end(JSON.stringify(documents));
 };
 
 export const handleDeleteDocumentRequest = async (

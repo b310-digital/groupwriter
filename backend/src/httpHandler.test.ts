@@ -196,7 +196,7 @@ describe("handleUploadImageRequest", () => {
     } as never);
 
     mockFormidableParse.mockRejectedValueOnce(
-      new Error("maxFileSize exceeded"),
+      new Error("maxTotalFileSize exceeded"),
     );
 
     const response = mock<ServerResponse<IncomingMessage>>();

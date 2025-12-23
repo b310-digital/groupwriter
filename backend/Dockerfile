@@ -37,7 +37,9 @@ COPY --chown=node:node entrypoint.prod.sh package.json package-lock.json ./
 RUN npm ci
 
 COPY --from=production_builder --chown=node:node $APP_PATH/dist/ ./dist/
-COPY --from=production_builder --chown=node:node $APP_PATH/prisma/ ./prisma/
+# Move prisma related files to the dist folder to enable the deploy command
+COPY --from=production_builder --chown=node:node $APP_PATH/prisma/ ./dist/prisma/
+COPY --from=production_builder --chown=node:node $APP_PATH/prisma.config.ts ./dist/prisma.config.ts
 
 CMD ["./entrypoint.prod.sh"]
 

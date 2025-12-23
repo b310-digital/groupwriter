@@ -1,5 +1,5 @@
 import { IncomingMessage, ServerResponse } from "http";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mock } from "vitest-mock-extended";
 import {
   handleCreateDocumentRequest,
@@ -20,21 +20,26 @@ import { buildFullExampleImage } from "../tests/helpers/imageHelpers";
 vi.mock("stream/promises");
 vi.mock("./utils/uploaderDownloader");
 vi.mock("./utils/s3");
+
+const { mockFormidableParse } = vi.hoisted(() => ({
+  mockFormidableParse: vi.fn().mockResolvedValue([
+    {},
+    {
+      file: [
+        {
+          filepath: "test",
+          mimetype: "image/png",
+          originalFilename: "test.png",
+        },
+      ],
+    },
+  ]),
+}));
+
 vi.mock("formidable", () => ({
   default: () => {
     return {
-      parse: vi.fn().mockResolvedValue([
-        {},
-        {
-          file: [
-            {
-              filepath: "test",
-              mimetype: "image/png",
-              originalFilename: "test.png",
-            },
-          ],
-        },
-      ]),
+      parse: mockFormidableParse,
     };
   },
 }));
@@ -126,6 +131,21 @@ describe("handleDeleteDocumentRequest", () => {
 });
 
 describe("handleUploadImageRequest", () => {
+  beforeEach(() => {
+    mockFormidableParse.mockResolvedValue([
+      {},
+      {
+        file: [
+          {
+            filepath: "test",
+            mimetype: "image/png",
+            originalFilename: "test.png",
+          },
+        ],
+      },
+    ]);
+  });
+
   it("uploads an image", async () => {
     const doc = buildFullDocument();
     const image = buildFullExampleImage(doc.id);
@@ -165,6 +185,34 @@ describe("handleUploadImageRequest", () => {
     ).rejects.toBeUndefined();
 
     expect(response.writeHead.mock.calls[0][0]).toBe(403);
+  });
+
+  it("returns 413 when file size exceeds maximum allowed size", async () => {
+    const doc = buildFullDocument();
+    prismaMock.document.findFirst.mockResolvedValue({
+      id: doc.id,
+      data: doc.data,
+      modificationSecret: doc.modificationSecret,
+    } as never);
+
+    mockFormidableParse.mockRejectedValueOnce(
+      new Error("maxFileSize exceeded"),
+    );
+
+    const response = mock<ServerResponse<IncomingMessage>>();
+    const request = mock<IncomingMessage>();
+    await handleUploadImageRequest(
+      doc.id,
+      doc.modificationSecret,
+      request,
+      response,
+      prismaMock,
+    );
+
+    expect(response.writeHead.mock.calls[0][0]).toBe(413);
+    expect(response.end.mock.calls[0][0]).toContain(
+      "File size exceeds maximum allowed size",
+    );
   });
 });
 

@@ -39,7 +39,7 @@
     "yjs": "^13.6.28"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.956.0",
+    "@aws-sdk/client-s3": "^3.966.0",
     "prisma": "^7.2.0",
     "@hocuspocus/extension-database": "^3.4.3",
     "@hocuspocus/extension-logger": "^3.4.3",

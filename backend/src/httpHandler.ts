@@ -144,7 +144,7 @@ export const handleGetImageRequest = async (
     try {
       await pipeline(Readable.from(downloadedImage), response);
     } catch (error) {
-      if (error?.code === "ERR_STREAM_PREMATURE_CLOSE") {
+      if (error instanceof Error && (error as NodeJS.ErrnoException).code === "ERR_STREAM_PREMATURE_CLOSE") {
         return;
       }
       throw error;

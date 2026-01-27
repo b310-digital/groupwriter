@@ -141,7 +141,14 @@ export const handleGetImageRequest = async (
       "Content-Type": getImageResult.mimetype,
       "Content-Disposition": "inline; filename=" + getImageResult.name,
     });
-    await pipeline(Readable.from(downloadedImage), response);
+    try {
+      await pipeline(Readable.from(downloadedImage), response);
+    } catch (error) {
+      if (error?.code === "ERR_STREAM_PREMATURE_CLOSE") {
+        return;
+      }
+      throw error;
+    }
   } else {
     response.writeHead(404);
   }

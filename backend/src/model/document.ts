@@ -1,4 +1,5 @@
 import { PrismaClient, Prisma } from "../../generated/prisma/client";
+import { deleteImage } from "./image";
 import { deleteImageFromBucket } from "../utils/s3";
 import { isValidUUID } from "../utils/validators";
 
@@ -184,16 +185,14 @@ const deleteDocumentWithImages = async (
     },
   });
 
-  // Delete all images from the database atomically to avoid race conditions
-  await prisma.image.deleteMany({
-    where: {
-      documentId: documentId,
-    },
-  });
-
-  // Delete image files from bucket (safe to run even if already removed)
+  // Per-image: bucket first, then DB. If bucket fails, the DB record
+  // remains as a reference. If DB fails (e.g. already deleted by a
+  // concurrent request), deleteImage handles P2025 gracefully.
   await Promise.all(
-    images.map((image) => deleteImageFromBucket(image.id)),
+    images.map(async (image) => {
+      await deleteImageFromBucket(image.id);
+      await deleteImage(prisma, image.id);
+    }),
   );
 
   return prisma.document.delete({

@@ -11,9 +11,12 @@ import {
 } from "./document";
 import { buildFullDocument } from "../../tests/helpers/documentHelpers";
 import { buildFullExampleImage } from "../../tests/helpers/imageHelpers";
+import { deleteImage } from "./image";
 import { deleteImageFromBucket } from "../utils/s3";
 import { prismaMock } from "../../tests/helpers/mockPrisma";
 import { randomUUID } from "crypto";
+
+vi.mock("./image");
 
 vi.mock("../utils/s3");
 
@@ -25,7 +28,6 @@ describe("deleteOldDocuments", () => {
       { id: oldDoc.id },
     ] as never);
     prismaMock.image.findMany.mockResolvedValue([]);
-    prismaMock.image.deleteMany.mockResolvedValue({ count: 0 });
     prismaMock.document.delete.mockResolvedValue(oldDoc);
 
     await deleteOldDocuments(prismaMock);
@@ -49,16 +51,14 @@ describe("deleteOldDocuments", () => {
       { id: oldDoc.id },
     ] as never);
     prismaMock.image.findMany.mockResolvedValue([image]);
-    prismaMock.image.deleteMany.mockResolvedValue({ count: 1 });
     prismaMock.document.delete.mockResolvedValue(oldDoc);
+    vi.mocked(deleteImage).mockResolvedValue(image);
     vi.mocked(deleteImageFromBucket).mockResolvedValue(null);
 
     await deleteOldDocuments(prismaMock);
 
-    expect(prismaMock.image.deleteMany).toHaveBeenCalledWith({
-      where: { documentId: oldDoc.id },
-    });
     expect(deleteImageFromBucket).toHaveBeenCalledWith(image.id);
+    expect(deleteImage).toHaveBeenCalledWith(prismaMock, image.id);
   });
 });
 
@@ -67,7 +67,6 @@ describe("deleteDocument", () => {
     const doc = buildFullDocument();
     prismaMock.document.findFirst.mockResolvedValue({ id: doc.id } as never);
     prismaMock.image.findMany.mockResolvedValue([]);
-    prismaMock.image.deleteMany.mockResolvedValue({ count: 0 });
     prismaMock.document.delete.mockResolvedValue(doc);
 
     const result = await deleteDocument(
@@ -87,8 +86,8 @@ describe("deleteDocument", () => {
     const image = buildFullExampleImage(doc.id);
     prismaMock.document.findFirst.mockResolvedValue({ id: doc.id } as never);
     prismaMock.image.findMany.mockResolvedValue([image]);
-    prismaMock.image.deleteMany.mockResolvedValue({ count: 1 });
     prismaMock.document.delete.mockResolvedValue(doc);
+    vi.mocked(deleteImage).mockResolvedValue(image);
     vi.mocked(deleteImageFromBucket).mockResolvedValue(null);
 
     const result = await deleteDocument(
@@ -98,10 +97,8 @@ describe("deleteDocument", () => {
     );
 
     expect(result).toBeTruthy();
-    expect(prismaMock.image.deleteMany).toHaveBeenCalledWith({
-      where: { documentId: doc.id },
-    });
     expect(deleteImageFromBucket).toHaveBeenCalledWith(image.id);
+    expect(deleteImage).toHaveBeenCalledWith(prismaMock, image.id);
   });
 
   it("should not delete the document if the id is missing", async () => {

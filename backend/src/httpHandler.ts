@@ -162,11 +162,12 @@ export const handleDeleteImageRequest = async (
     modificationSecret,
     response,
   );
-  const deletedImageResult = await deleteImage(prisma, imageId);
-  const result = deletedImageResult
-    ? await deleteImageFromBucket(imageId)
+  // Delete bucket file first so DB record remains as reference if this fails
+  const bucketResult = image ? await deleteImageFromBucket(imageId) : null;
+  const deletedImageResult = bucketResult
+    ? await deleteImage(prisma, imageId)
     : null;
-  if (deletedImageResult && result) {
+  if (bucketResult && deletedImageResult) {
     response.writeHead(204);
   } else {
     response.writeHead(404);

@@ -1,8 +1,7 @@
-@import "tailwindcss";
-
+@import 'tailwindcss';
 
 @theme {
-  --font-kits: "FiraSans", "sans-serif";
+  --font-kits: 'FiraSans', 'sans-serif';
   --color-primary: var(--color-blue-700);
   --color-secondary: var(--color-blue-500);
   --color-neutral: var(--color-gray);

@@ -24,9 +24,9 @@ const Modal = ({
       aria-labelledby="modal-title"
     >
       <div
-        className={`bg-white p-6 rounded-lg shadow-lg ${className ?? 'w-96'}`}
+        className={`flex max-h-[85vh] flex-col bg-white rounded-lg shadow-lg ${className ?? 'w-96'}`}
       >
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex shrink-0 justify-between items-center p-6 pb-4">
           <h2 id="modal-title" className="text-xl font-semibold">
             {header}
           </h2>
@@ -40,7 +40,9 @@ const Modal = ({
             </button>
           )}
         </div>
-        {children}
+        <div className="overflow-y-auto px-6 pb-6">
+          {children}
+        </div>
       </div>
     </div>
   );

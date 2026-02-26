@@ -8,7 +8,8 @@ import type {
   OerSearchResultEvent,
   OerItem,
   LoadMoreMeta,
-  SourceConfig
+  SourceConfig,
+  OerCardClickDetail
 } from '@edufeed-org/oer-finder-plugin-react';
 import { Editor } from '@tiptap/react';
 import { useCallback, useState } from 'react';
@@ -33,18 +34,12 @@ const ALLOWED_IMAGE_TYPES: Record<string, string> = {
   'image/webp': 'webp'
 };
 
-function extractLicenseUrl(license: unknown): string | null {
+function extractLicenseUrl(
+  license: Record<string, never> | undefined
+): string | null {
   if (!license) return null;
-  if (typeof license === 'string') return license;
-  if (
-    typeof license === 'object' &&
-    license !== null &&
-    'id' in license &&
-    typeof (license as { id: unknown }).id === 'string'
-  ) {
-    return (license as { id: string }).id;
-  }
-  return null;
+  const id = (license as unknown as Record<string, string>).id;
+  return typeof id === 'string' ? id : null;
 }
 
 const OER_SOURCES: SourceConfig[] = [
@@ -75,7 +70,7 @@ export function OerFinderModal({
   const language = i18n.language?.startsWith('de') ? 'de' : 'en';
 
   const handleSearchResults = useCallback(
-    (event: CustomEvent<OerSearchResultEvent>) => {
+    (event: OerSearchResultEvent) => {
       const { data, meta } = event.detail;
       setOers(data);
       setLoading(false);
@@ -91,7 +86,7 @@ export function OerFinderModal({
 
   const handleSearchError = useCallback(
     (event: CustomEvent<{ error: string }>) => {
-      setError(event.detail.error);
+      setError(event.detail?.error ?? 'Search failed');
       setLoading(false);
       setMetadata(null);
     },
@@ -108,27 +103,18 @@ export function OerFinderModal({
   const [uploading, setUploading] = useState(false);
 
   const handleCardClick = useCallback(
-    (event: CustomEvent<OerCardClickEvent>) => {
-      const detail = event.detail;
+    (event: OerCardClickEvent) => {
+      const detail: OerCardClickDetail = event.detail;
       if (!detail?.oer || uploading) return;
 
-      const oer = detail.oer as Record<string, unknown>;
-      const extensions = oer.extensions as
-        | Record<string, Record<string, unknown>>
-        | undefined;
-      const amb = oer.amb as Record<string, unknown> | undefined;
-
+      const { oer } = detail;
       const imageUrl =
-        (extensions?.images?.small as string | undefined) ??
-        (amb?.image as string | undefined) ??
-        null;
+        oer.extensions.images?.small ?? oer.amb.image ?? null;
 
       if (imageUrl && isValidImageUrl(imageUrl)) {
-        const licenseUrl = extractLicenseUrl(amb?.license);
-        const sourceId = amb?.id as string | undefined;
-        const sourceUrl = extensions?.system?.foreignLandingUrl as
-          | string
-          | undefined;
+        const licenseUrl = extractLicenseUrl(oer.amb.license);
+        const sourceId = oer.amb.id;
+        const sourceUrl = oer.extensions.system.foreignLandingUrl;
 
         setUploading(true);
         setError(null);
@@ -203,7 +189,7 @@ export function OerFinderModal({
       onToggle={toggleModal}
       className="w-full max-w-3xl"
     >
-      <div className="relative max-h-[70vh] overflow-y-auto">
+      <div className="relative">
         {uploading && (
           <div
             className="absolute inset-0 z-10 flex items-center justify-center bg-white/70"

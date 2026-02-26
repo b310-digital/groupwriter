@@ -31,6 +31,8 @@ USER node
 # first, copy packages as these are built during the install step
 COPY  --chown=node:node packages $APP_PATH/packages
 
+RUN mkdir -p $APP_PATH/frontend
+
 RUN npm ci
 
 COPY  --chown=node:node src $APP_PATH/src

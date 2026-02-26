@@ -40,7 +40,9 @@ import { setEditorContentFromFile } from '../utils/editorExport';
 import TableDropdown from './TableDropdown';
 import { v4 as uuidv4 } from 'uuid';
 
-const OER_FINDER_ENABLED = import.meta.env.VITE_FEATURE_OER_FINDER_ENABLED === 'true';
+const OER_FINDER_ENABLED =
+  import.meta.env.VITE_FEATURE_OER_FINDER_ENABLED === 'true';
+
 const handleImageUpload = async (
   editor: Editor,
   documentId: string,

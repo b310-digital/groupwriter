@@ -31,30 +31,33 @@ const Image = BaseImage.extend({
       ...this.parent?.(),
       'data-license': {
         default: null,
-        parseHTML: (element: HTMLElement) => element.getAttribute('data-license'),
+        parseHTML: (element: HTMLElement) =>
+          element.getAttribute('data-license'),
         renderHTML: (attributes: Record<string, unknown>) => {
           if (!attributes['data-license']) return {};
           return { 'data-license': attributes['data-license'] };
-        },
+        }
       },
       'data-source-id': {
         default: null,
-        parseHTML: (element: HTMLElement) => element.getAttribute('data-source-id'),
+        parseHTML: (element: HTMLElement) =>
+          element.getAttribute('data-source-id'),
         renderHTML: (attributes: Record<string, unknown>) => {
           if (!attributes['data-source-id']) return {};
           return { 'data-source-id': attributes['data-source-id'] };
-        },
+        }
       },
       'data-source-url': {
         default: null,
-        parseHTML: (element: HTMLElement) => element.getAttribute('data-source-url'),
+        parseHTML: (element: HTMLElement) =>
+          element.getAttribute('data-source-url'),
         renderHTML: (attributes: Record<string, unknown>) => {
           if (!attributes['data-source-url']) return {};
           return { 'data-source-url': attributes['data-source-url'] };
-        },
-      },
+        }
+      }
     };
-  },
+  }
 });
 
 // Create server url for a host using the subdomain groupwriter.host.tld for the editor.

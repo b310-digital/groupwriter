@@ -8,6 +8,7 @@ import {
   CodeBracketIcon,
   DocumentCheckIcon,
   DocumentPlusIcon,
+  GlobeAltIcon,
   ItalicIcon,
   LinkIcon,
   ListBulletIcon,
@@ -37,6 +38,10 @@ import { LocalDocumentUser } from '../utils/localstorage';
 import { getAwarenessColor } from '../utils/userColors';
 import { setEditorContentFromFile } from '../utils/editorExport';
 import TableDropdown from './TableDropdown';
+import { OerFinderModal } from './OerFinderModal';
+
+const OER_FINDER_ENABLED =
+  import.meta.env.VITE_FEATURE_OER_FINDER_ENABLED === 'true';
 
 const handleImageUpload = async (
   editor: Editor,
@@ -149,6 +154,7 @@ export default function MenuBar({
 }) {
   const { t } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const [oerFinderOpen, setOerFinderOpen] = useState<boolean>(false);
   const { readOnly } = useContext(EditorContext);
 
   const toggleMobileMenu = () => {
@@ -406,6 +412,17 @@ export default function MenuBar({
                   <PhotoIcon className="size-4" />
                 </label>
               </li>
+              {OER_FINDER_ENABLED && (
+                <li key="btn-oer-finder" className="lg:inline-block">
+                  <button
+                    title={t('menuBar.buttons.oerFinder')}
+                    onClick={() => setOerFinderOpen(true)}
+                    className="btn-editor"
+                  >
+                    <GlobeAltIcon className="size-4" />
+                  </button>
+                </li>
+              )}
               <li key="btn-export" className="lg:inline-block">
                 <DownloadDropdown editor={editor} />
               </li>
@@ -432,6 +449,15 @@ export default function MenuBar({
           </div>
           {children}
         </FixedMenuBar>
+        {OER_FINDER_ENABLED && (
+          <OerFinderModal
+            isModalOpen={oerFinderOpen}
+            toggleModal={() => setOerFinderOpen(false)}
+            editor={editor}
+            documentId={documentId}
+            modificationSecret={modificationSecret}
+          />
+        )}
       </>
     );
   }

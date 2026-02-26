@@ -18,6 +18,8 @@ jobs:
       - name: Install dependencies
         working-directory: ./frontend
         run: npm ci
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Install Playwright Browsers
         working-directory: ./frontend

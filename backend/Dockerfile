@@ -47,4 +47,6 @@ FROM base AS development
 USER node
 COPY --chown=node:node package.json package-lock.json tsconfig.json tsconfig.prod.json entrypoint.prod.sh  $APP_PATH/
 
+RUN mkdir -p $APP_PATH/backend
+
 RUN npm install

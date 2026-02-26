@@ -462,6 +462,8 @@ export default function MenuBar({
             isModalOpen={oerFinderOpen}
             toggleModal={() => setOerFinderOpen(false)}
             editor={editor}
+            documentId={documentId}
+            modificationSecret={modificationSecret}
           />
         )}
       </>

@@ -93,7 +93,8 @@
         }
       },
       "oerFinder": {
-        "title": "OER Resources"
+        "title": "OER Resources",
+        "uploading": "Uploading image..."
       },
       "about": {
         "title": "About",

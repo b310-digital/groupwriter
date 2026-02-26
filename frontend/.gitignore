@@ -11,6 +11,7 @@
 !/src/
 !.dockerignore
 !.gitignore
+!.npmrc
 !.prettierrc
 !docker-compose-prod.yml
 !docker-compose.yml

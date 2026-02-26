@@ -5,4 +5,5 @@ interface ImportMetaEnv {
   VITE_HOCUSPOCUS_SUBDOMAIN: string;
   VITE_LEGAL_URL: string | undefined;
   VITE_PRIVACY_STATEMENT_URL: string | undefined;
+  VITE_FEATURE_OER_FINDER_ENABLED: string | undefined;
 }

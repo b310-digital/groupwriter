@@ -8,45 +8,19 @@ import type {
   OerSearchResultEvent,
   OerItem,
   LoadMoreMeta,
-  SourceConfig,
   OerCardClickDetail
 } from '@edufeed-org/oer-finder-plugin-react';
 import { Editor } from '@tiptap/react';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from './Modal';
-import { uploadImage } from '../utils/serverRequests';
-import { serverUrl } from '../utils/editorSetup';
-
-function isValidImageUrl(url: string): boolean {
-  try {
-    const parsed = new URL(url);
-    return parsed.protocol === 'https:' || parsed.protocol === 'http:';
-  } catch {
-    return false;
-  }
-}
-
-const ALLOWED_IMAGE_TYPES: Record<string, string> = {
-  'image/jpeg': 'jpg',
-  'image/png': 'png',
-  'image/gif': 'gif',
-  'image/webp': 'webp'
-};
-
-function extractLicenseUrl(
-  license: Record<string, never> | undefined
-): string | null {
-  if (!license) return null;
-  const id = (license as unknown as Record<string, string>).id;
-  return typeof id === 'string' ? id : null;
-}
-
-const OER_SOURCES: SourceConfig[] = [
-  { id: 'openverse', label: 'Openverse', checked: true },
-  { id: 'arasaac', label: 'ARASAAC', checked: true },
-  { id: 'wikimedia', label: 'Wikimedia Commons', checked: true }
-];
+import { SpinnerOverlay } from './SpinnerOverlay';
+import {
+  isValidImageUrl,
+  extractLicenseUrl,
+  fetchAndUploadOerImage,
+  OER_SOURCES
+} from '../utils/oerFinder';
 
 export function OerFinderModal({
   isModalOpen,
@@ -66,19 +40,18 @@ export function OerFinderModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [metadata, setMetadata] = useState<LoadMoreMeta | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const uploadingRef = useRef(false);
 
   const language = i18n.language?.startsWith('de') ? 'de' : 'en';
 
-  const handleSearchResults = useCallback(
-    (event: OerSearchResultEvent) => {
-      const { data, meta } = event.detail;
-      setOers(data);
-      setLoading(false);
-      setError(null);
-      setMetadata(meta);
-    },
-    []
-  );
+  const handleSearchResults = useCallback((event: OerSearchResultEvent) => {
+    const { data, meta } = event.detail;
+    setOers(data);
+    setLoading(false);
+    setError(null);
+    setMetadata(meta);
+  }, []);
 
   const handleSearchLoading = useCallback(() => {
     setLoading(true);
@@ -100,69 +73,29 @@ export function OerFinderModal({
     setMetadata(null);
   }, []);
 
-  const [uploading, setUploading] = useState(false);
-
   const handleCardClick = useCallback(
     (event: OerCardClickEvent) => {
       const detail: OerCardClickDetail = event.detail;
-      if (!detail?.oer || uploading) return;
+      if (!detail?.oer || uploadingRef.current) return;
 
       const { oer } = detail;
-      const imageUrl =
-        oer.extensions.images?.small ?? oer.amb.image ?? null;
+      const imageUrl = oer.extensions.images?.small ?? oer.amb.image ?? null;
 
       if (imageUrl && isValidImageUrl(imageUrl)) {
-        const licenseUrl = extractLicenseUrl(oer.amb.license);
-        const sourceId = oer.amb.id;
-        const sourceUrl = oer.extensions.system.foreignLandingUrl;
-
+        uploadingRef.current = true;
         setUploading(true);
         setError(null);
 
         void (async () => {
           try {
-            const response = await fetch(imageUrl);
-            if (!response.ok) {
-              throw new Error(`Failed to fetch image: ${response.status}`);
-            }
-
-            const blob = await response.blob();
-            const extension = ALLOWED_IMAGE_TYPES[blob.type];
-            if (!extension) {
-              throw new Error(`Unsupported image type: ${blob.type}`);
-            }
-
-            const urlFilename =
-              new URL(imageUrl).pathname.split('/').pop() ?? '';
-            const filename = urlFilename.includes('.')
-              ? urlFilename
-              : `oer-image.${extension}`;
-            const file = new File([blob], filename, { type: blob.type });
-            const uploadedPath = await uploadImage(
-              file,
+            const attrs = await fetchAndUploadOerImage({
+              imageUrl,
+              licenseUrl: extractLicenseUrl(oer.amb.license),
+              sourceId: oer.amb.id,
+              sourceUrl: oer.extensions.system.foreignLandingUrl,
               documentId,
               modificationSecret
-            );
-            if (!uploadedPath) {
-              throw new Error('Image upload failed');
-            }
-
-            const attrs: Record<string, string> = {
-              src: `${serverUrl()}/${uploadedPath}`
-            };
-            if (licenseUrl) {
-              attrs['data-license'] = licenseUrl;
-            }
-            if (typeof sourceId === 'string' && sourceId) {
-              attrs['data-source-id'] = sourceId;
-            }
-            if (
-              typeof sourceUrl === 'string' &&
-              sourceUrl &&
-              isValidImageUrl(sourceUrl)
-            ) {
-              attrs['data-source-url'] = sourceUrl;
-            }
+            });
             editor
               .chain()
               .focus()
@@ -174,12 +107,13 @@ export function OerFinderModal({
               err instanceof Error ? err.message : 'Failed to upload image'
             );
           } finally {
+            uploadingRef.current = false;
             setUploading(false);
           }
         })();
       }
     },
-    [editor, toggleModal, documentId, modificationSecret, uploading]
+    [editor, toggleModal, documentId, modificationSecret]
   );
 
   return (
@@ -191,38 +125,7 @@ export function OerFinderModal({
     >
       <div className="relative">
         {uploading && (
-          <div
-            className="absolute inset-0 z-10 flex items-center justify-center bg-white/70"
-            role="status"
-            aria-live="polite"
-          >
-            <div className="flex items-center gap-2 rounded bg-white px-4 py-2 shadow">
-              <svg
-                aria-hidden="true"
-                className="h-5 w-5 animate-spin text-blue-500"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                />
-              </svg>
-              <span className="text-sm text-gray-700">
-                {t('modals.oerFinder.uploading')}
-              </span>
-            </div>
-          </div>
+          <SpinnerOverlay message={t('modals.oerFinder.uploading')} />
         )}
         <OerSearch
           language={language}

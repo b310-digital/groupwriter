@@ -45,6 +45,14 @@ const Image = BaseImage.extend({
           return { 'data-source-id': attributes['data-source-id'] };
         },
       },
+      'data-source-url': {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.getAttribute('data-source-url'),
+        renderHTML: (attributes: Record<string, unknown>) => {
+          if (!attributes['data-source-url']) return {};
+          return { 'data-source-url': attributes['data-source-url'] };
+        },
+      },
     };
   },
 });

@@ -14,6 +14,8 @@ import { Editor } from '@tiptap/react';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from './Modal';
+import { uploadImage } from '../utils/serverRequests';
+import { serverUrl } from '../utils/editorSetup';
 
 function isValidImageUrl(url: string): boolean {
   try {
@@ -23,6 +25,13 @@ function isValidImageUrl(url: string): boolean {
     return false;
   }
 }
+
+const ALLOWED_IMAGE_TYPES: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/gif': 'gif',
+  'image/webp': 'webp',
+};
 
 function extractLicenseUrl(license: unknown): string | null {
   if (!license) return null;
@@ -43,11 +52,15 @@ const OER_SOURCES: SourceConfig[] = [
 export function OerFinderModal({
   isModalOpen,
   toggleModal,
-  editor
+  editor,
+  documentId,
+  modificationSecret
 }: {
   isModalOpen: boolean;
   toggleModal: () => void;
   editor: Editor;
+  documentId: string;
+  modificationSecret: string;
 }) {
   const { t, i18n } = useTranslation();
   const [oers, setOers] = useState<OerItem[]>([]);
@@ -88,10 +101,12 @@ export function OerFinderModal({
     setMetadata(null);
   }, []);
 
+  const [uploading, setUploading] = useState(false);
+
   const handleCardClick = useCallback(
     (event: CustomEvent<OerCardClickEvent>) => {
       const detail = event.detail;
-      if (!detail?.oer) return;
+      if (!detail?.oer || uploading) return;
 
       const imageUrl =
         detail.oer.extensions?.images?.small ??
@@ -100,19 +115,56 @@ export function OerFinderModal({
 
       if (imageUrl && isValidImageUrl(imageUrl)) {
         const licenseUrl = extractLicenseUrl(detail.oer.amb?.license);
-        const sourceId = detail.oer.extensions?.system?.source;
-        const attrs: Record<string, string> = { src: imageUrl };
-        if (licenseUrl) {
-          attrs['data-license'] = licenseUrl;
-        }
-        if (typeof sourceId === 'string' && sourceId) {
-          attrs['data-source-id'] = sourceId;
-        }
-        editor.chain().focus().insertContent({ type: 'image', attrs }).run();
-        toggleModal();
+        const sourceId = detail.oer.amb?.id;
+        const sourceUrl = detail.oer.extensions?.system?.foreignLandingUrl;
+
+        setUploading(true);
+        setError(null);
+
+        void (async () => {
+          try {
+            const response = await fetch(imageUrl);
+            if (!response.ok) {
+              throw new Error(`Failed to fetch image: ${response.status}`);
+            }
+
+            const blob = await response.blob();
+            const extension = ALLOWED_IMAGE_TYPES[blob.type];
+            if (!extension) {
+              throw new Error(`Unsupported image type: ${blob.type}`);
+            }
+
+            const urlFilename = new URL(imageUrl).pathname.split('/').pop() ?? '';
+            const filename = urlFilename.includes('.') ? urlFilename : `oer-image.${extension}`;
+            const file = new File([blob], filename, { type: blob.type });
+            const uploadedPath = await uploadImage(file, documentId, modificationSecret);
+            if (!uploadedPath) {
+              throw new Error('Image upload failed');
+            }
+
+            const attrs: Record<string, string> = {
+              src: `${serverUrl()}/${uploadedPath}`
+            };
+            if (licenseUrl) {
+              attrs['data-license'] = licenseUrl;
+            }
+            if (typeof sourceId === 'string' && sourceId) {
+              attrs['data-source-id'] = sourceId;
+            }
+            if (typeof sourceUrl === 'string' && sourceUrl && isValidImageUrl(sourceUrl)) {
+              attrs['data-source-url'] = sourceUrl;
+            }
+            editor.chain().focus().insertContent({ type: 'image', attrs }).run();
+            toggleModal();
+          } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to upload image');
+          } finally {
+            setUploading(false);
+          }
+        })();
       }
     },
-    [editor, toggleModal]
+    [editor, toggleModal, documentId, modificationSecret, uploading]
   );
 
   return (
@@ -122,7 +174,18 @@ export function OerFinderModal({
       onToggle={toggleModal}
       className="w-full max-w-3xl"
     >
-      <div className="max-h-[70vh] overflow-y-auto">
+      <div className="relative max-h-[70vh] overflow-y-auto">
+        {uploading && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70" role="status" aria-live="polite">
+            <div className="flex items-center gap-2 rounded bg-white px-4 py-2 shadow">
+              <svg aria-hidden="true" className="h-5 w-5 animate-spin text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+              <span className="text-sm text-gray-700">{t('modals.oerFinder.uploading')}</span>
+            </div>
+          </div>
+        )}
         <OerSearch
           language={language}
           lockedType="image"

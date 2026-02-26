@@ -93,7 +93,8 @@
         }
       },
       "oerFinder": {
-        "title": "OER-Materialien"
+        "title": "OER-Materialien",
+        "uploading": "Bild wird hochgeladen..."
       },
       "about": {
         "title": "Info",

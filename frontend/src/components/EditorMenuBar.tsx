@@ -40,7 +40,8 @@ import { setEditorContentFromFile } from '../utils/editorExport';
 import TableDropdown from './TableDropdown';
 import { OerFinderModal } from './OerFinderModal';
 
-const OER_FINDER_ENABLED = import.meta.env.VITE_FEATURE_OER_FINDER_ENABLED === 'true';
+const OER_FINDER_ENABLED =
+  import.meta.env.VITE_FEATURE_OER_FINDER_ENABLED === 'true';
 
 const handleImageUpload = async (
   editor: Editor,

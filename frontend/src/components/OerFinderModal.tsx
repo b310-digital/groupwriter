@@ -30,13 +30,18 @@ const ALLOWED_IMAGE_TYPES: Record<string, string> = {
   'image/jpeg': 'jpg',
   'image/png': 'png',
   'image/gif': 'gif',
-  'image/webp': 'webp',
+  'image/webp': 'webp'
 };
 
 function extractLicenseUrl(license: unknown): string | null {
   if (!license) return null;
   if (typeof license === 'string') return license;
-  if (typeof license === 'object' && license !== null && 'id' in license && typeof (license as { id: unknown }).id === 'string') {
+  if (
+    typeof license === 'object' &&
+    license !== null &&
+    'id' in license &&
+    typeof (license as { id: unknown }).id === 'string'
+  ) {
     return (license as { id: string }).id;
   }
   return null;
@@ -45,9 +50,8 @@ function extractLicenseUrl(license: unknown): string | null {
 const OER_SOURCES: SourceConfig[] = [
   { id: 'openverse', label: 'Openverse', checked: true },
   { id: 'arasaac', label: 'ARASAAC', checked: true },
-  { id: 'wikimedia', label: 'Wikimedia Commons', checked: true },
+  { id: 'wikimedia', label: 'Wikimedia Commons', checked: true }
 ];
-
 
 export function OerFinderModal({
   isModalOpen,
@@ -108,15 +112,23 @@ export function OerFinderModal({
       const detail = event.detail;
       if (!detail?.oer || uploading) return;
 
+      const oer = detail.oer as Record<string, unknown>;
+      const extensions = oer.extensions as
+        | Record<string, Record<string, unknown>>
+        | undefined;
+      const amb = oer.amb as Record<string, unknown> | undefined;
+
       const imageUrl =
-        detail.oer.extensions?.images?.small ??
-        detail.oer.amb?.image ??
+        (extensions?.images?.small as string | undefined) ??
+        (amb?.image as string | undefined) ??
         null;
 
       if (imageUrl && isValidImageUrl(imageUrl)) {
-        const licenseUrl = extractLicenseUrl(detail.oer.amb?.license);
-        const sourceId = detail.oer.amb?.id;
-        const sourceUrl = detail.oer.extensions?.system?.foreignLandingUrl;
+        const licenseUrl = extractLicenseUrl(amb?.license);
+        const sourceId = amb?.id as string | undefined;
+        const sourceUrl = extensions?.system?.foreignLandingUrl as
+          | string
+          | undefined;
 
         setUploading(true);
         setError(null);
@@ -134,10 +146,17 @@ export function OerFinderModal({
               throw new Error(`Unsupported image type: ${blob.type}`);
             }
 
-            const urlFilename = new URL(imageUrl).pathname.split('/').pop() ?? '';
-            const filename = urlFilename.includes('.') ? urlFilename : `oer-image.${extension}`;
+            const urlFilename =
+              new URL(imageUrl).pathname.split('/').pop() ?? '';
+            const filename = urlFilename.includes('.')
+              ? urlFilename
+              : `oer-image.${extension}`;
             const file = new File([blob], filename, { type: blob.type });
-            const uploadedPath = await uploadImage(file, documentId, modificationSecret);
+            const uploadedPath = await uploadImage(
+              file,
+              documentId,
+              modificationSecret
+            );
             if (!uploadedPath) {
               throw new Error('Image upload failed');
             }
@@ -151,13 +170,23 @@ export function OerFinderModal({
             if (typeof sourceId === 'string' && sourceId) {
               attrs['data-source-id'] = sourceId;
             }
-            if (typeof sourceUrl === 'string' && sourceUrl && isValidImageUrl(sourceUrl)) {
+            if (
+              typeof sourceUrl === 'string' &&
+              sourceUrl &&
+              isValidImageUrl(sourceUrl)
+            ) {
               attrs['data-source-url'] = sourceUrl;
             }
-            editor.chain().focus().insertContent({ type: 'image', attrs }).run();
+            editor
+              .chain()
+              .focus()
+              .insertContent({ type: 'image', attrs })
+              .run();
             toggleModal();
           } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to upload image');
+            setError(
+              err instanceof Error ? err.message : 'Failed to upload image'
+            );
           } finally {
             setUploading(false);
           }
@@ -176,13 +205,36 @@ export function OerFinderModal({
     >
       <div className="relative max-h-[70vh] overflow-y-auto">
         {uploading && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70" role="status" aria-live="polite">
+          <div
+            className="absolute inset-0 z-10 flex items-center justify-center bg-white/70"
+            role="status"
+            aria-live="polite"
+          >
             <div className="flex items-center gap-2 rounded bg-white px-4 py-2 shadow">
-              <svg aria-hidden="true" className="h-5 w-5 animate-spin text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              <svg
+                aria-hidden="true"
+                className="h-5 w-5 animate-spin text-blue-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                />
               </svg>
-              <span className="text-sm text-gray-700">{t('modals.oerFinder.uploading')}</span>
+              <span className="text-sm text-gray-700">
+                {t('modals.oerFinder.uploading')}
+              </span>
             </div>
           </div>
         )}

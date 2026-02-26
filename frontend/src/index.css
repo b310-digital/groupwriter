@@ -14,3 +14,21 @@ input {
 button {
   @apply border-2 border-neutral-200 rounded-md p-2 cursor-pointer;
 }
+
+oer-search,
+oer-list,
+oer-list oer-card {
+  --primary-color: var(--color-secondary);
+  --primary-hover-color: var(--color-primary);
+  --secondary-color: var(--color-blue-600);
+  --text-primary: var(--color-neutral-700);
+  --text-secondary: var(--color-neutral-500);
+  --text-muted: var(--color-neutral-400);
+  --background-form: var(--color-neutral-50);
+  --background-input: var(--color-white);
+  --background-card: var(--color-white);
+  --border-color: var(--color-neutral-200);
+  --input-border-color: var(--color-neutral-300);
+  --button-secondary-bg: var(--color-neutral-100);
+  --button-secondary-hover-bg: var(--color-neutral-200);
+}

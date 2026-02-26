@@ -13,6 +13,7 @@
         },
         "import": "Importieren von HTML",
         "imageUpload": "Bild hochladen",
+        "oerFinder": "OER-Materialien suchen",
         "comment": "Kommentar",
         "suggestion": "Vorschlag",
         "mobileMenu": "Menü",
@@ -90,6 +91,9 @@
         "messages": {
           "copied": "Kopiert!"
         }
+      },
+      "oerFinder": {
+        "title": "OER-Materialien"
       },
       "about": {
         "title": "Info",

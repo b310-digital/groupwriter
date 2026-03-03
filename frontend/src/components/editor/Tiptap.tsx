@@ -112,13 +112,19 @@ const Tiptap = ({ documentId }: { documentId: string }) => {
     },
     [setComments]
   );
-  const editor = useEditor({
-    injectCSS: false,
-    shouldRerenderOnTransaction: true,
-    enablePasteRules: [CollaborationCommentsExtension],
-    immediatelyRender: false,
-    editable: !readOnly,
-    extensions: createExtensions(
+  const extensions = useMemo(
+    () =>
+      createExtensions(
+        ydoc,
+        t,
+        provider,
+        modificationSecret,
+        handleCommentsPosUpdated,
+        handleCommentsDataUpdated,
+        handleCommentActivated,
+        currentUser
+      ),
+    [
       ydoc,
       t,
       provider,
@@ -127,7 +133,15 @@ const Tiptap = ({ documentId }: { documentId: string }) => {
       handleCommentsDataUpdated,
       handleCommentActivated,
       currentUser
-    ),
+    ]
+  );
+
+  const editor = useEditor({
+    injectCSS: false,
+    enablePasteRules: [CollaborationCommentsExtension],
+    immediatelyRender: false,
+    editable: !readOnly,
+    extensions,
     editorProps: {
       attributes: {
         class:

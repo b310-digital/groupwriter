@@ -114,7 +114,10 @@ describe("handleGetOwnDocumentsRequest", () => {
 describe("handleDeleteDocumentRequest", () => {
   it("deletes a document", async () => {
     const doc = buildFullDocument();
-    prismaMock.document.findFirst.mockResolvedValue({ id: doc.id } as never);
+    prismaMock.document.findFirst.mockResolvedValue({
+      id: doc.id,
+      modificationSecret: doc.modificationSecret,
+    } as never);
     prismaMock.image.findMany.mockResolvedValue([]);
     prismaMock.document.delete.mockResolvedValue(doc);
 
@@ -323,7 +326,7 @@ describe("handleGetImageRequest", () => {
     expect(response.writeHead.mock.calls[0][0]).toEqual(200);
     expect(response.writeHead.mock.calls[0][1]).toHaveProperty(
       "Content-Disposition",
-      "inline; filename=test.png",
+      'inline; filename="test.png"',
     );
     expect(response.writeHead.mock.calls[0][1]).toHaveProperty(
       "Content-Type",

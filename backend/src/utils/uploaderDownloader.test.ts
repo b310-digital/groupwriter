@@ -37,7 +37,7 @@ describe("uploadEncryptedImage", () => {
       Buffer.from("test"),
       imageid.slice(0, 16),
     );
-    expect(mockRm).toHaveBeenCalledWith("/tmp/test.png");
+    expect(mockRm).toHaveBeenCalledWith("/tmp/test.png", { force: true });
     expect(mockReadFile).toHaveBeenCalledWith("/tmp/test.png");
   });
 
@@ -53,7 +53,21 @@ describe("uploadEncryptedImage", () => {
     await expect(
       uploadEncryptedImage(imageid, "image/png", "/tmp/test.png"),
     ).rejects.toThrow("S3 upload failed");
-    expect(mockRm).toHaveBeenCalledWith("/tmp/test.png");
+    expect(mockRm).toHaveBeenCalledWith("/tmp/test.png", { force: true });
+  });
+
+  it("cleans up temp file even when encrypt fails", async () => {
+    vi.mocked(encrypt).mockImplementation(() => {
+      throw new Error("encrypt failed");
+    });
+    mockRm.mockResolvedValue(undefined);
+    mockReadFile.mockResolvedValue(Buffer.from("test"));
+
+    const imageid = randomUUID();
+    await expect(
+      uploadEncryptedImage(imageid, "image/png", "/tmp/test.png"),
+    ).rejects.toThrow("encrypt failed");
+    expect(mockRm).toHaveBeenCalledWith("/tmp/test.png", { force: true });
   });
 });
 
@@ -75,9 +89,7 @@ describe("downloadEncryptedImage", () => {
 
   it("returns null when S3 returns error", async () => {
     const imageId = randomUUID();
-    vi.mocked(getImageFromBucket).mockRejectedValue(
-      new Error("NoSuchKey"),
-    );
+    vi.mocked(getImageFromBucket).mockRejectedValue(new Error("NoSuchKey"));
     const result = await downloadEncryptedImage(imageId);
     expect(result).toBeNull();
   });

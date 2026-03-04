@@ -97,9 +97,10 @@ export const handleUploadImageRequest = async (
     return;
   }
   try {
-    const maxFileSize = process.env.UPLOAD_IMAGE_MAX_SIZE_BYTES
-      ? parseInt(process.env.UPLOAD_IMAGE_MAX_SIZE_BYTES, 10)
-      : DEFAULT_MAX_IMAGE_SIZE_BYTES;
+    const parsed = parseInt(process.env.UPLOAD_IMAGE_MAX_SIZE_BYTES ?? "", 10);
+    const maxFileSize = Number.isNaN(parsed)
+      ? DEFAULT_MAX_IMAGE_SIZE_BYTES
+      : parsed;
 
     const form = formidable({ multiples: false, maxFileSize });
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -155,12 +156,18 @@ export const handleGetImageRequest = async (
   if (getImageResult && downloadedImage) {
     response.writeHead(200, {
       "Content-Type": getImageResult.mimetype,
-      "Content-Disposition": "inline; filename=" + getImageResult.name,
+      "Content-Disposition": `inline; filename="${getImageResult.name.replace(/["\\\r\n]/g, "_")}"`,
+      "Content-Length": downloadedImage.length,
+      "X-Content-Type-Options": "nosniff",
+      "Cache-Control": "public, max-age=31536000, immutable",
     });
     try {
       await pipeline(Readable.from(downloadedImage), response);
     } catch (error) {
-      if (error instanceof Error && (error as NodeJS.ErrnoException).code === "ERR_STREAM_PREMATURE_CLOSE") {
+      if (
+        error instanceof Error &&
+        (error as NodeJS.ErrnoException).code === "ERR_STREAM_PREMATURE_CLOSE"
+      ) {
         return;
       }
       throw error;

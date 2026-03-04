@@ -7,12 +7,12 @@ export const uploadEncryptedImage = async (
   mimetype: string,
   tmpFilepath: string,
 ): Promise<void> => {
-  const data = await fs.readFile(tmpFilepath);
-  const encrypted = encrypt(data, imageId.slice(0, 16));
   try {
+    const data = await fs.readFile(tmpFilepath);
+    const encrypted = encrypt(data, imageId.slice(0, 16));
     await uploadImageToBucket(encrypted, imageId, mimetype);
   } finally {
-    await fs.rm(tmpFilepath);
+    await fs.rm(tmpFilepath, { force: true });
   }
 };
 

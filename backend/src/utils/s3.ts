@@ -32,10 +32,10 @@ export const uploadImageToBucket = async (
   return await client.send(new PutObjectCommand(params));
 };
 
-export const getImageFromBucket = (
+export const getImageFromBucket = async (
   filename: string,
 ): Promise<GetObjectCommandOutput | undefined> => {
-  if (!filename) return;
+  if (!filename) return undefined;
 
   const params = {
     Bucket: process.env.OBJECT_STORAGE_BUCKET,

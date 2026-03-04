@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { PrismaClient } from "../generated/prisma/client";
 import { fetchDocument } from "./model/document";
 
@@ -7,11 +8,11 @@ const checkModificationSecret = async (
   modificationSecret: string,
 ) => {
   const document = await fetchDocument(prisma, documentId);
-  return (
-    document &&
-    document.modificationSecret &&
-    document.modificationSecret === modificationSecret
-  );
+  if (!document) return false;
+
+  const a = Buffer.from(document.modificationSecret);
+  const b = Buffer.from(modificationSecret);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
 };
 
 export const checkPermission = async (

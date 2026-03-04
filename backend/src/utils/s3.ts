@@ -23,17 +23,13 @@ export const uploadImageToBucket = async (
   newFilename: string,
   contentType: string,
 ): Promise<PutObjectCommandOutput> => {
-  try {
-    const params = {
-      Bucket: process.env.OBJECT_STORAGE_BUCKET,
-      Key: newFilename,
-      Body: data,
-      ContentType: contentType,
-    };
-    return client.send(new PutObjectCommand(params));
-  } catch (error) {
-    console.error(error);
-  }
+  const params = {
+    Bucket: process.env.OBJECT_STORAGE_BUCKET,
+    Key: newFilename,
+    Body: data,
+    ContentType: contentType,
+  };
+  return await client.send(new PutObjectCommand(params));
 };
 
 export const getImageFromBucket = (

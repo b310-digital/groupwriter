@@ -1,5 +1,4 @@
 import { PrismaClient } from "../generated/prisma/client";
-import { ServerResponse } from "http";
 import { fetchDocument } from "./model/document";
 
 const checkModificationSecret = async (
@@ -19,15 +18,10 @@ export const checkPermission = async (
   prisma: PrismaClient,
   documentId: string,
   modificationSecret: string,
-  response: ServerResponse,
-) => {
-  if (
-    !(await checkModificationSecret(prisma, documentId, modificationSecret))
-  ) {
-    response.writeHead(403);
-    response.end();
-    // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
-    return Promise.reject();
-  }
-  return Promise.resolve();
+): Promise<boolean> => {
+  return !!(await checkModificationSecret(
+    prisma,
+    documentId,
+    modificationSecret,
+  ));
 };

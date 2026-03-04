@@ -45,6 +45,21 @@ const Tiptap = ({ documentId }: { documentId: string }) => {
   const [connectionClosed, setConnectionClosed] = useState<boolean>(false);
   const [mobileCommentMenuOpen, setMobileCommentMenuOpen] =
     useState<boolean>(false);
+  const [localEditingIds, setLocalEditingIds] = useState<Set<string>>(
+    new Set()
+  );
+
+  const addLocalEditingId = useCallback((id: string) => {
+    setLocalEditingIds((prev) => new Set(prev).add(id));
+  }, []);
+
+  const removeLocalEditingId = useCallback((id: string) => {
+    setLocalEditingIds((prev) => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     editor?.destroy();
@@ -173,6 +188,7 @@ const Tiptap = ({ documentId }: { documentId: string }) => {
             modificationSecret={modificationSecret}
             currentUser={currentUser}
             setMobileCommentMenuOpen={setMobileCommentMenuOpen}
+            addLocalEditingId={addLocalEditingId}
           >
             <ConnectionClosedModal isModalOpen={connectionClosed} />
             <UtilMenuBar
@@ -203,7 +219,8 @@ const Tiptap = ({ documentId }: { documentId: string }) => {
                         setMobileCommentMenuOpen,
                         t,
                         {
-                          className: 'inline-block'
+                          className: 'inline-block',
+                          addLocalEditingId
                         }
                       )}
                   </BubbleMenu>
@@ -218,6 +235,8 @@ const Tiptap = ({ documentId }: { documentId: string }) => {
                 markPos={markPos}
                 editor={editor}
                 activatedComment={activatedComment}
+                localEditingIds={localEditingIds}
+                removeLocalEditingId={removeLocalEditingId}
               />
             </div>
           </div>

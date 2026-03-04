@@ -1,4 +1,3 @@
-import type { SourceConfig } from '@edufeed-org/oer-finder-plugin-react';
 import { uploadImage } from './serverRequests';
 import { serverUrl } from './editorSetup';
 
@@ -25,12 +24,6 @@ export function extractLicenseUrl(
   const id = license.id;
   return typeof id === 'string' ? id : null;
 }
-
-export const OER_SOURCES: SourceConfig[] = [
-  { id: 'openverse', label: 'Openverse', checked: true },
-  { id: 'arasaac', label: 'ARASAAC', checked: true },
-  { id: 'wikimedia', label: 'Wikimedia Commons', checked: true }
-];
 
 export async function fetchAndUploadOerImage({
   imageUrl,

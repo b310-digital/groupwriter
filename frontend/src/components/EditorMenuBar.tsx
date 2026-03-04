@@ -38,6 +38,7 @@ import { LocalDocumentUser } from '../utils/localstorage';
 import { getAwarenessColor } from '../utils/userColors';
 import { setEditorContentFromFile } from '../utils/editorExport';
 import TableDropdown from './TableDropdown';
+import { OerFinderModal } from './OerFinderModal';
 import { v4 as uuidv4 } from 'uuid';
 
 const OER_FINDER_ENABLED =

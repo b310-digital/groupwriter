@@ -4,7 +4,6 @@ import {
   isValidImageUrl,
   extractLicenseUrl,
   ALLOWED_IMAGE_TYPES,
-  OER_SOURCES,
   fetchAndUploadOerImage
 } from './oerFinder';
 
@@ -78,22 +77,6 @@ describe('ALLOWED_IMAGE_TYPES', () => {
 
   it('does not include svg as an allowed type', () => {
     expect(ALLOWED_IMAGE_TYPES['image/svg+xml']).toBeUndefined();
-  });
-});
-
-describe('OER_SOURCES', () => {
-  it('contains three sources with correct ids', () => {
-    const ids = OER_SOURCES.map((s) => s.id);
-    expect(ids).toEqual(['openverse', 'arasaac', 'wikimedia']);
-  });
-
-  it('has all sources checked by default', () => {
-    expect(OER_SOURCES.every((s) => s.checked === true)).toBe(true);
-  });
-
-  it('contains expected labels', () => {
-    const labels = OER_SOURCES.map((s) => s.label);
-    expect(labels).toEqual(['Openverse', 'ARASAAC', 'Wikimedia Commons']);
   });
 });
 

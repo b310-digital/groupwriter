@@ -18,8 +18,7 @@ import { SpinnerOverlay } from './SpinnerOverlay';
 import {
   isValidImageUrl,
   extractLicenseUrl,
-  fetchAndUploadOerImage,
-  OER_SOURCES
+  fetchAndUploadOerImage
 } from '../utils/oerFinder';
 
 export function OerFinderModal({
@@ -130,7 +129,6 @@ export function OerFinderModal({
         <OerSearch
           language={language}
           lockedType="image"
-          sources={OER_SOURCES}
           onSearchLoading={handleSearchLoading}
           onSearchResults={handleSearchResults}
           onSearchError={handleSearchError}

@@ -61,7 +61,7 @@ const createMockComment = (
 
 const createMockMarkPos = (
   commentId: string,
-  top: number = 100
+  top = 100
 ): MarkWithPos => ({
   commentId,
   range: { from: 0, to: 10 },

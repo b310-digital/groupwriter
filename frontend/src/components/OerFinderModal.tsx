@@ -8,8 +8,10 @@ import type {
   OerSearchResultEvent,
   OerItem,
   LoadMoreMeta,
-  OerCardClickDetail
+  OerCardClickDetail,
+  SourceConfig
 } from '@edufeed-org/oer-finder-plugin-react';
+import { registerArasaacAdapter, registerNostrAmbRelayAdapter, registerWikimediaAdapter } from '@edufeed-org/oer-finder-plugin/adapters';
 import { Editor } from '@tiptap/react';
 import { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +22,16 @@ import {
   extractLicenseUrl,
   fetchAndUploadOerImage
 } from '../utils/oerFinder';
+
+registerArasaacAdapter();
+registerNostrAmbRelayAdapter();
+registerWikimediaAdapter();
+
+const SOURCES: SourceConfig[] = [
+  { id: 'nostr-amb-relay', label: 'Nostr AMB Relay', baseUrl: 'wss://oersi.edufeed.org' },
+  { id: 'wikimedia', label: 'Wikimedia', checked: true },
+  { id: 'arasaac', label: 'ARASAAC', checked: true },
+];
 
 export function OerFinderModal({
   isModalOpen,
@@ -127,6 +139,7 @@ export function OerFinderModal({
           <SpinnerOverlay message={t('modals.oerFinder.uploading')} />
         )}
         <OerSearch
+          sources={SOURCES}
           language={language}
           lockedType="image"
           onSearchLoading={handleSearchLoading}

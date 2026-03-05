@@ -1,13 +1,10 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { registerAllBuiltInAdapters } from '@edufeed-org/oer-finder-plugin/adapters';
 import App from './App';
 import './index.css';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 import './i18n';
 import LandingPage from './pages/LandingPage';
-
-registerAllBuiltInAdapters();
 
 const root = document.getElementById('root');
 

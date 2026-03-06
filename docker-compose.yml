@@ -3,11 +3,13 @@ services:
     build:
       context: ./frontend
       target: development
+    working_dir: /home/node/app/frontend
     tty: true
     stdin_open: true
     environment:
       BINDING: "0.0.0.0"
       VITE_HOCUSPOCUS_SERVER_URL: "/backend"
+      VITE_FEATURE_OER_FINDER_ENABLED: "true"
       TESTING_PLAYWRIGHT_WS_ENDPOINT: "ws://playwright:9323"
       TESTING_PLAYWRIGHT_BASE_URL: "http://editor:5173"
     ports:
@@ -15,7 +17,7 @@ services:
       # preview
       - "4173:4173"
     volumes:
-      - ./frontend:/home/node/app
+      - ./:/home/node/app
       #- app_editor_node_modules:/home/node/app
     networks:
       - default
@@ -25,6 +27,7 @@ services:
     build:
       context: ./backend
       target: development
+    working_dir: /home/node/app/backend
     tty: true
     stdin_open: true
     environment:
@@ -44,7 +47,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./backend:/home/node/app
+      - ./:/home/node/app
       #- app_backend_node_modules:/home/node/app/node_modules
     restart: always
     networks:

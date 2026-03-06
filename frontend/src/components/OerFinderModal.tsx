@@ -28,7 +28,7 @@ registerNostrAmbRelayAdapter();
 registerWikimediaAdapter();
 
 const SOURCES: SourceConfig[] = [
-  { id: 'nostr-amb-relay', label: 'Nostr AMB Relay', baseUrl: 'wss://oersi.edufeed.org' },
+  { id: 'nostr-amb-relay', label: 'Nostr AMB Relay', baseUrl: 'wss://oersi.edufeed.org,wss://amb-relay.edufeed.org' },
   { id: 'wikimedia', label: 'Wikimedia', checked: true },
   { id: 'arasaac', label: 'ARASAAC', checked: true },
 ];

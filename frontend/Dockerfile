@@ -16,21 +16,25 @@ COPY --chown=node:node package.json package-lock.json tsconfig.json $APP_PATH/
 FROM base AS development
 USER node
 
-RUN npm install
-
 # Production builder:
 FROM base AS production_builder
 ARG VITE_HOCUSPOCUS_SERVER_URL
 ARG VITE_HOCUSPOCUS_SUBDOMAIN
 ARG VITE_LEGAL_URL
 ARG VITE_PRIVACY_STATEMENT_URL
+ARG VITE_FEATURE_OER_FINDER_ENABLED
 
 USER node
 
 # first, copy packages as these are built during the install step
 COPY  --chown=node:node packages $APP_PATH/packages
 
-RUN npm ci
+RUN mkdir -p $APP_PATH/frontend
+
+RUN --mount=type=secret,id=npmrc,target=/home/node/app/.npmrc,uid=1000 \
+    --mount=type=secret,id=GITHUB_TOKEN,uid=1000 \
+    GITHUB_TOKEN=$(cat /run/secrets/GITHUB_TOKEN) \
+    npm ci
 
 COPY  --chown=node:node src $APP_PATH/src
 COPY  --chown=node:node public $APP_PATH/public

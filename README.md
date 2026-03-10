@@ -7,7 +7,58 @@ GroupWriter is a collaborative text editing application, similar and influenced 
 
 ## Setup
 
-The application is divided into a backend and frontend folder with separate docker image. 
+The application is divided into a backend and frontend folder with separate docker image.
+
+### Prerequisites
+
+This project uses packages from the GitHub Package Registry. The `.npmrc` file in the project root is configured to use a `GITHUB_TOKEN` environment variable for authentication. Set it in your shell before installing dependencies:
+
+```bash
+export GITHUB_TOKEN=your_github_personal_access_token
+```
+
+The token needs the `read:packages` scope. You can create one at https://github.com/settings/tokens.
+
+After that:
+
+```
+cp .env.default .env
+```
+
+And adjust the values accordingly. The `DOCKER_COMPOSE_APP_VAULT_ENCRYPTION_KEY_BASE64` needs to be exactly 32 bytes long, generate it e.g. with:
+
+```
+openssl rand -hex 16
+```
+
+### Local Development
+
+1. Install dependencies:
+
+```bash
+cd backend
+npm install
+```
+
+2. Generate the Prisma client:
+
+```bash
+npx prisma generate
+```
+
+3. Make sure you have a running PostgreSQL database and set the `DATABASE_URL` environment variable.
+
+4. Run database migrations:
+
+```bash
+npx prisma migrate deploy
+```
+
+5. Start the development server:
+
+```bash
+npm run start:dev
+```
 
 ### Docker Compose for Production
 

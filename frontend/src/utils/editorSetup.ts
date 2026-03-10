@@ -11,7 +11,7 @@ import CollaborationCommentsExtension, {
 } from '@packages/tiptap-extension-comment-collaboration';
 import { LocalDocumentUser } from './localstorage';
 import StarterKit from '@tiptap/starter-kit';
-import Image from '@tiptap/extension-image';
+import BaseImage from '@tiptap/extension-image';
 import ImageDeleteCallback from '@packages/tiptap-extension-image-delete-callback';
 import { TextStyle } from '@tiptap/extension-text-style';
 import Collaboration from '@tiptap/extension-collaboration';
@@ -24,6 +24,41 @@ import { Table } from '@tiptap/extension-table';
 import TableCell from '@tiptap/extension-table-cell';
 import TableHeader from '@tiptap/extension-table-header';
 import TableRow from '@tiptap/extension-table-row';
+
+const Image = BaseImage.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      'data-license': {
+        default: null,
+        parseHTML: (element: HTMLElement) =>
+          element.getAttribute('data-license'),
+        renderHTML: (attributes: Record<string, unknown>) => {
+          if (!attributes['data-license']) return {};
+          return { 'data-license': attributes['data-license'] };
+        }
+      },
+      'data-source-id': {
+        default: null,
+        parseHTML: (element: HTMLElement) =>
+          element.getAttribute('data-source-id'),
+        renderHTML: (attributes: Record<string, unknown>) => {
+          if (!attributes['data-source-id']) return {};
+          return { 'data-source-id': attributes['data-source-id'] };
+        }
+      },
+      'data-source-url': {
+        default: null,
+        parseHTML: (element: HTMLElement) =>
+          element.getAttribute('data-source-url'),
+        renderHTML: (attributes: Record<string, unknown>) => {
+          if (!attributes['data-source-url']) return {};
+          return { 'data-source-url': attributes['data-source-url'] };
+        }
+      }
+    };
+  }
+});
 
 // Create server url for a host using the subdomain groupwriter.host.tld for the editor.
 const createServerUrl = (targetSubdomain: string, postFix?: string): string => {

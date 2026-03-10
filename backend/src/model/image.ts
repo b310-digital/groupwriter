@@ -76,7 +76,7 @@ export const deleteImage = async (
   }
 };
 
-const ALLOWED_MIME_TYPES = new Set(["image/jpeg", "image/png"]);
+const ALLOWED_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 const validateImageParams = (
   documentId: string,

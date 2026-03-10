@@ -9,6 +9,8 @@ void i18n
   .use(LanguageDetector)
   .init({
     resources: { de: translationDE, en: translationEN },
+    supportedLngs: ['de', 'en'],
+    nonExplicitSupportedLngs: true,
     fallbackLng: 'en',
     debug: false
   });

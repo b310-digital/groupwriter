@@ -13,6 +13,7 @@
         },
         "import": "Import from HTML",
         "imageUpload": "Upload image",
+        "oerFinder": "Search OER resources",
         "comment": "Comment",
         "suggestion": "Suggestion",
         "mobileMenu": "Menu",
@@ -90,6 +91,10 @@
         "messages": {
           "copied": "Copied!"
         }
+      },
+      "oerFinder": {
+        "title": "OER Resources",
+        "uploading": "Uploading image..."
       },
       "about": {
         "title": "About",

@@ -27,11 +27,17 @@ jobs:
             dockerfile: ./frontend/Dockerfile
             build-args: |
               VITE_HOCUSPOCUS_SUBDOMAIN=write-backend
+            secret-files: |
+              npmrc=frontend/.npmrc
+            secrets: |
+              GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
           - name: backend
             image: backend
             context: ./backend
             dockerfile: ./backend/Dockerfile
             build-args: ""
+            secret-files: ""
+            secrets: ""
 
     steps:
       - name: Checkout repository
@@ -65,3 +71,5 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           provenance: false
           build-args: ${{ matrix.build-args }}
+          secret-files: ${{ matrix.secret-files }}
+          secrets: ${{ matrix.secrets }}

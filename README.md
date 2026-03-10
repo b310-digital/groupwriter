@@ -19,6 +19,18 @@ export GITHUB_TOKEN=your_github_personal_access_token
 
 The token needs the `read:packages` scope. You can create one at https://github.com/settings/tokens.
 
+After that:
+
+```
+cp .env.default .env
+```
+
+And adjust the values accordingly. The `DOCKER_COMPOSE_APP_VAULT_ENCRYPTION_KEY_BASE64` needs to be exactly 32 bytes long, generate it e.g. with:
+
+```
+openssl rand -hex 16
+```
+
 ### Local Development
 
 1. Install dependencies:

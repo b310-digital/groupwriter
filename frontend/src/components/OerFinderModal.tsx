@@ -28,7 +28,7 @@ registerNostrAmbRelayAdapter();
 registerWikimediaAdapter();
 
 const SOURCES: SourceConfig[] = [
-  { id: 'nostr-amb-relay', label: 'Nostr AMB Relay', baseUrl: 'wss://oersi.edufeed.org,wss://amb-relay.edufeed.org' },
+  { id: 'nostr-amb-relay', label: 'Nostr AMB Relay' },
   { id: 'wikimedia', label: 'Wikimedia', checked: true },
   { id: 'arasaac', label: 'ARASAAC', checked: true },
 ];
@@ -139,9 +139,9 @@ export function OerFinderModal({
           <SpinnerOverlay message={t('modals.oerFinder.uploading')} />
         )}
         <OerSearch
+          apiUrl="https://oer-finder-plugin.osc-fr1.scalingo.io"
           sources={SOURCES}
           language={language}
-          lockedType="image"
           onSearchLoading={handleSearchLoading}
           onSearchResults={handleSearchResults}
           onSearchError={handleSearchError}

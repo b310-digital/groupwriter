@@ -1,0 +1,15 @@
+packages:
+  - 'packages/*'
+# 7-day quarantine on newly published versions (mitigates fast-revoked malicious releases).
+minimumReleaseAge: 10080
+# Lifecycle-script allowlist. pnpm 10 blocks dependency build scripts by default.
+# @parcel/watcher and esbuild ship native binaries vite needs; core-js's postinstall
+# is only a funding notice and stays disallowed.
+allowBuilds:
+  '@parcel/watcher': true
+  core-js: false
+  esbuild: true
+# Transitive/direct-dep CVE pins. Audit periodically with `pnpm why <pkg>` and remove
+# entries whose selector no longer matches any node in pnpm-lock.yaml.
+overrides:
+  'jspdf@<=4.2.0': '>=4.2.1'

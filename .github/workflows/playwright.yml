@@ -10,29 +10,17 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    # Browsers + system deps are pre-installed in the official image, so there is
+    # no flaky `playwright install --with-deps` download step. Keep the tag in sync
+    # with the @playwright/test version in frontend/package.json.
+    container:
+      image: mcr.microsoft.com/playwright:v1.58.2-noble
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - uses: ./.github/actions/setup-pnpm
         with:
           working-directory: ./frontend
-
-      - name: Cache Playwright browsers
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
-        id: playwright-cache
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-browsers-${{ hashFiles('frontend/pnpm-lock.yaml') }}-chromium
-
-      - name: Install Playwright Browsers
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        working-directory: ./frontend
-        run: pnpm exec playwright install chromium --with-deps
-
-      - name: Install Playwright system dependencies
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        working-directory: ./frontend
-        run: pnpm exec playwright install-deps chromium
 
       - name: Run Playwright tests
         working-directory: ./frontend

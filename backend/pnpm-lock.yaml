@@ -12,6 +12,7 @@ overrides:
   lodash@>=4.0.0 <=4.17.23: '>=4.18.0'
   defu@<=6.1.4: '>=6.1.5'
   flatted@<3.3.4: '>=3.3.4'
+  path-to-regexp@8.2.0: '>=8.3.0'
 
 importers:
 
@@ -1842,9 +1843,8 @@ packages:
     resolution: {integrity: sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==}
     engines: {node: '>=8'}
 
-  path-to-regexp@8.2.0:
-    resolution: {integrity: sha512-TdrF7fW9Rphjq4RjrW0Kp2AW0Ahwu9sRGTkS6bvDi0SCwZlEZYmcfDbEsTz8RVk0EHIS/Vd1bv3JhG+1xZuAyQ==}
-    engines: {node: '>=16'}
+  path-to-regexp@8.4.2:
+    resolution: {integrity: sha512-qRcuIdP69NPm4qbACK+aDogI5CBDMi1jKe0ry5rSQJz8JVLsC7jV8XpiJjGRLLol3N+R5ihGYcrPLTno6pAdBA==}
 
   pathe@2.0.3:
     resolution: {integrity: sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==}
@@ -4410,7 +4410,7 @@ snapshots:
       '@sinonjs/fake-timers': 13.0.5
       '@sinonjs/text-encoding': 0.7.3
       just-extend: 6.2.0
-      path-to-regexp: 8.2.0
+      path-to-regexp: 8.4.2
 
   node-fetch-native@1.6.7: {}
 
@@ -4453,7 +4453,7 @@ snapshots:
 
   path-key@3.1.1: {}
 
-  path-to-regexp@8.2.0: {}
+  path-to-regexp@8.4.2: {}
 
   pathe@2.0.3: {}
 

@@ -1,4 +1,4 @@
-# pnpm security settings — see ../documentation/pnpm-security.md for the full policy.
+# pnpm security settings.
 # 7-day quarantine on newly published versions (mitigates fast-revoked malicious releases).
 minimumReleaseAge: 10080
 # Lifecycle-script allowlist. pnpm 10 blocks dependency build scripts by default.

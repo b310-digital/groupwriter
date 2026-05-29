@@ -1,4 +1,4 @@
-# Dependabot config — see documentation/pnpm-security.md for the full policy.
+# Dependabot config.
 # Reference: https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference
 # The "npm" ecosystem covers pnpm (Dependabot reads pnpm-lock.yaml).
 # frontend/ and backend/ are independent pnpm projects; GitHub Actions live at the repo root.

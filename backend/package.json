@@ -23,7 +23,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@hocuspocus/provider": "^3.4.4",
-    "@hocuspocus/transformer": "^3.4.4",
+    "@hocuspocus/transformer": "^4.2.0",
     "@smithy/util-stream": "^4.5.15",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.3.3",

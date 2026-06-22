@@ -120,8 +120,8 @@ importers:
         specifier: ^4.0.18
         version: 4.0.18(@types/node@25.3.3)(jiti@2.6.0)(tsx@4.21.0)
       vitest-mock-extended:
-        specifier: ^3.0.1
-        version: 3.1.0(typescript@5.9.3)(vitest@4.0.18(@types/node@25.3.3)(jiti@2.6.0)(tsx@4.21.0))
+        specifier: ^4.0.0
+        version: 4.0.0(typescript@5.9.3)(vitest@4.0.18(@types/node@25.3.3)(jiti@2.6.0)(tsx@4.21.0))
 
 packages:
 
@@ -1711,6 +1711,11 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
+  lib0@0.2.117:
+    resolution: {integrity: sha512-DeXj9X5xDCjgKLU/7RR+/HQEVzuuEUiwldwOGsHK/sfAfELGWEyTcf0x+uOvCvK3O2zPmZePXWL85vtia6GyZw==}
+    engines: {node: '>=16'}
+    hasBin: true
+
   lilconfig@2.1.0:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
     engines: {node: '>=10'}
@@ -2143,8 +2148,8 @@ packages:
     peerDependencies:
       typescript: '>=4.8.4'
 
-  ts-essentials@10.0.4:
-    resolution: {integrity: sha512-lwYdz28+S4nicm+jFi6V58LaAIpxzhg9rLdgNC1VsdP/xiFBseGhF1M/shwCk6zMmwahBZdXcl34LVHrEang3A==}
+  ts-essentials@10.2.1:
+    resolution: {integrity: sha512-+Id1fRkuir+CsgK2x04/icS2b4V1hQmq7ObzIrDjhN0ozfRYivnP7aaKMVJfLApQm0trjR39A6NIMVchiB9Erw==}
     peerDependencies:
       typescript: '>=4.5.0'
     peerDependenciesMeta:
@@ -2257,11 +2262,11 @@ packages:
       yaml:
         optional: true
 
-  vitest-mock-extended@3.1.0:
-    resolution: {integrity: sha512-vCM0VkuocOUBwwqwV7JB7YStw07pqeKvEIrZnR8l3PtwYi6rAAJAyJACeC1UYNfbQWi85nz7EdiXWBFI5hll2g==}
+  vitest-mock-extended@4.0.0:
+    resolution: {integrity: sha512-m2FmH8JYfxzZoLsHuhXRY+Pv++a3zd91HYpSz81tpRLEHbtFkEL2QcWvJowucWuNTirzQURKfWbJJSXbYqkTsA==}
     peerDependencies:
-      typescript: 3.x || 4.x || 5.x
-      vitest: '>=3.0.0'
+      typescript: 3.x || 4.x || 5.x || 6.x
+      vitest: '>=4.0.0'
 
   vitest@4.0.18:
     resolution: {integrity: sha512-hOQuK7h0FGKgBAas7v0mSAsnvrIgAvWmRFjmzpJ7SwFHH3g1k2u37JtYwOwmEKhK6ZO3v9ggDBBm0La1LCK4uQ==}
@@ -4329,6 +4334,10 @@ snapshots:
     dependencies:
       isomorphic.js: 0.2.5
 
+  lib0@0.2.117:
+    dependencies:
+      isomorphic.js: 0.2.5
+
   lilconfig@2.1.0: {}
 
   linkify-it@5.0.0:
@@ -4780,7 +4789,7 @@ snapshots:
     dependencies:
       typescript: 5.9.3
 
-  ts-essentials@10.0.4(typescript@5.9.3):
+  ts-essentials@10.2.1(typescript@5.9.3):
     optionalDependencies:
       typescript: 5.9.3
 
@@ -4860,9 +4869,9 @@ snapshots:
       jiti: 2.6.0
       tsx: 4.21.0
 
-  vitest-mock-extended@3.1.0(typescript@5.9.3)(vitest@4.0.18(@types/node@25.3.3)(jiti@2.6.0)(tsx@4.21.0)):
+  vitest-mock-extended@4.0.0(typescript@5.9.3)(vitest@4.0.18(@types/node@25.3.3)(jiti@2.6.0)(tsx@4.21.0)):
     dependencies:
-      ts-essentials: 10.0.4(typescript@5.9.3)
+      ts-essentials: 10.2.1(typescript@5.9.3)
       typescript: 5.9.3
       vitest: 4.0.18(@types/node@25.3.3)(jiti@2.6.0)(tsx@4.21.0)
 
@@ -4926,7 +4935,7 @@ snapshots:
 
   y-prosemirror@1.3.5(prosemirror-model@1.25.1)(prosemirror-state@1.4.3)(prosemirror-view@1.39.2)(y-protocols@1.0.6(yjs@13.6.29))(yjs@13.6.29):
     dependencies:
-      lib0: 0.2.107
+      lib0: 0.2.117
       prosemirror-model: 1.25.1
       prosemirror-state: 1.4.3
       prosemirror-view: 1.39.2
@@ -4935,7 +4944,7 @@ snapshots:
 
   y-protocols@1.0.6(yjs@13.6.29):
     dependencies:
-      lib0: 0.2.107
+      lib0: 0.2.117
       yjs: 13.6.29
 
   yjs@13.6.29:

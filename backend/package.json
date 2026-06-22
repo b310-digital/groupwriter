@@ -46,7 +46,7 @@
     "prisma": "^7.4.2",
     "@hocuspocus/extension-database": "^3.4.4",
     "@hocuspocus/extension-logger": "^3.4.4",
-    "@hocuspocus/server": "^3.1.1",
+    "@hocuspocus/server": "^4.2.0",
     "@prisma/adapter-pg": "^7.4.2",
     "@prisma/client": "^7.4.2",
     "@types/formidable": "^3.4.7",

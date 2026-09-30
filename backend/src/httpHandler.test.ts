@@ -129,7 +129,7 @@ describe("handleDeleteDocumentRequest", () => {
     prismaMock.document.findFirst.mockResolvedValue({
       id: doc.id,
       modificationSecret: doc.modificationSecret,
-    } as never);
+    });
     prismaMock.image.findMany.mockResolvedValue([]);
     prismaMock.document.delete.mockResolvedValue(doc);
 
@@ -178,7 +178,7 @@ describe("handleUploadImageRequest", () => {
       id: doc.id,
       data: doc.data,
       modificationSecret: doc.modificationSecret,
-    } as never);
+    });
     prismaMock.image.create.mockResolvedValue(image);
 
     const response = mock<ServerResponse<IncomingMessage>>();
@@ -201,7 +201,7 @@ describe("handleUploadImageRequest", () => {
       id: doc.id,
       data: doc.data,
       modificationSecret: doc.modificationSecret,
-    } as never);
+    });
 
     const response = mock<ServerResponse<IncomingMessage>>();
     const request = mock<IncomingMessage>();
@@ -222,7 +222,7 @@ describe("handleUploadImageRequest", () => {
       id: doc.id,
       data: doc.data,
       modificationSecret: doc.modificationSecret,
-    } as never);
+    });
     prismaMock.image.create.mockResolvedValue(null);
 
     const response = mock<ServerResponse<IncomingMessage>>();
@@ -244,7 +244,7 @@ describe("handleUploadImageRequest", () => {
       id: doc.id,
       data: doc.data,
       modificationSecret: doc.modificationSecret,
-    } as never);
+    });
 
     mockFormidableParse.mockResolvedValueOnce([{}, {}]);
 
@@ -268,7 +268,7 @@ describe("handleUploadImageRequest", () => {
       id: doc.id,
       data: doc.data,
       modificationSecret: doc.modificationSecret,
-    } as never);
+    });
     prismaMock.image.create.mockResolvedValue(image);
     prismaMock.image.delete.mockResolvedValue(image);
 
@@ -299,7 +299,7 @@ describe("handleUploadImageRequest", () => {
       id: doc.id,
       data: doc.data,
       modificationSecret: doc.modificationSecret,
-    } as never);
+    });
 
     mockFormidableParse.mockRejectedValueOnce(
       new Error("maxTotalFileSize exceeded"),
@@ -356,7 +356,7 @@ describe("handleDeleteImageRequest", () => {
       id: doc.id,
       data: doc.data,
       modificationSecret: doc.modificationSecret,
-    } as never);
+    });
     prismaMock.image.delete.mockResolvedValue(image);
     vi.mocked(deleteImageFromBucket).mockResolvedValue(
       {} as DeleteObjectCommandOutput,
@@ -381,7 +381,7 @@ describe("handleDeleteImageRequest", () => {
       id: doc.id,
       data: doc.data,
       modificationSecret: doc.modificationSecret,
-    } as never);
+    });
     vi.mocked(deleteImageFromBucket).mockResolvedValue(
       {} as DeleteObjectCommandOutput,
     );

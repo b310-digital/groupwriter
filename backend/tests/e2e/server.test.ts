@@ -76,7 +76,7 @@ describe("server", () => {
       id: doc.id,
       data: doc.data,
       modificationSecret: doc.modificationSecret,
-    } as never);
+    });
 
     const hocuspocus = await newHocuspocus({
       onAuthenticate: async ({ documentName, connectionConfig, token }) => {
@@ -111,7 +111,7 @@ describe("server", () => {
       id: doc.id,
       data: doc.data,
       modificationSecret: doc.modificationSecret,
-    } as never);
+    });
 
     const hocuspocus = await newHocuspocus({
       onAuthenticate: async ({ documentName, connectionConfig, token }) => {

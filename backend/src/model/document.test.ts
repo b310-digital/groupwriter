@@ -376,6 +376,13 @@ describe("document ownership", () => {
       expect(prismaMock.document.findMany).not.toHaveBeenCalled();
     });
 
+    it("returns an empty list if ownerExternalId is undefined", async () => {
+      const docs = await getDocumentsByOwner(prismaMock, undefined);
+
+      expect(docs).toEqual([]);
+      expect(prismaMock.document.findMany).not.toHaveBeenCalled();
+    });
+
     it("returns an empty list if ownerExternalId is not a string", async () => {
       // Guards against a Prisma filter object reaching the where clause.
       const docs = await getDocumentsByOwner(prismaMock, {

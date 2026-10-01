@@ -97,6 +97,14 @@ describe("handleGetOwnDocumentsRequest", () => {
     expect(prismaMock.document.findMany).not.toHaveBeenCalled();
   });
 
+  it("returns empty list when ownerId is undefined", async () => {
+    const response = mock<ServerResponse<IncomingMessage>>();
+    await handleGetOwnDocumentsRequest(response, prismaMock, undefined);
+
+    expect(JSON.parse(response.end.mock.calls[0][0] as string)).toEqual([]);
+    expect(prismaMock.document.findMany).not.toHaveBeenCalled();
+  });
+
   it("does not include ownerExternalId in any returned document", async () => {
     const doc = buildListedDocument({ ownerExternalId: "owner-234" });
     prismaMock.document.findMany.mockResolvedValue([doc] as never);
